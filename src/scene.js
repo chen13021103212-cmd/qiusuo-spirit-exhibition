@@ -113,7 +113,7 @@ function surfaceTexture(base, veins, speckles, repeat = [3, 3]) {
 }
 
 function labelTexture(hall, options = {}) {
-  const { small = "", name = hall.name, fontSize = 150 } = options;
+  const { small = "", name = hall.name, fontSize = 104 } = options;
   return canvasTexture((ctx, width, height) => {
     ctx.fillStyle = "#2b1b16";
     ctx.fillRect(0, 0, width, height);
@@ -123,14 +123,36 @@ function labelTexture(hall, options = {}) {
     ctx.textAlign = "center";
     if (small) {
       ctx.fillStyle = "#dec892";
-      ctx.font = "500 44px Songti SC, STSong, serif";
-      ctx.fillText(small, width / 2, 104);
+      ctx.font = "500 52px Songti SC, STSong, serif";
+      ctx.fillText(small, width / 2, 128);
     }
     ctx.fillStyle = "#f4e4c1";
     ctx.font = `600 ${fontSize}px Songti SC, STSong, serif`;
-    const baseline = small ? height - 58 : (height + fontSize * .72) / 2;
+    const baseline = small ? 232 : (height + fontSize * .72) / 2;
     ctx.fillText(name, width / 2, baseline);
-  }, 1600, 500);
+  }, 1024, 320);
+}
+
+function createSegmentedCornice(radius, tube, radialSegments, tubularSegments, material, y, gapAngle = .255) {
+  const group = new THREE.Group();
+  const hallAngles = HALLS
+    .map(hall => ((hall.angle * DEG) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2))
+    .sort((a, b) => a - b);
+
+  hallAngles.forEach((angle, index) => {
+    const next = index === hallAngles.length - 1 ? hallAngles[0] + Math.PI * 2 : hallAngles[index + 1];
+    const start = angle + gapAngle;
+    const arc = next - gapAngle - start;
+    if (arc <= 0) return;
+    const geometry = new THREE.TorusGeometry(radius, tube, radialSegments, tubularSegments, arc);
+    geometry.rotateZ(start);
+    const segment = new THREE.Mesh(geometry, material);
+    segment.rotation.x = Math.PI / 2;
+    group.add(segment);
+  });
+
+  group.position.y = y;
+  return group;
 }
 
 function archiveTexture(variant = 0) {
@@ -478,7 +500,7 @@ function createArch(materials, hall) {
   farWall.rotation.y = Math.PI;
   group.add(farWall);
   group.add(createPortalThemePanel(hall, materials));
-  const label = new THREE.Mesh(new THREE.PlaneGeometry(3.02, .94), createReadableTexture(labelTexture(hall, { name: hall.name.replace("精神", "展厅") })));
+  const label = new THREE.Mesh(new THREE.PlaneGeometry(3.02, .94), createReadableTexture(labelTexture(hall, { name: hall.name.replace("精神", "展厅"), fontSize: 104 })));
   label.position.set(0, 5.6, -.78);
   faceReadablePlane(label);
   group.add(label);
@@ -514,7 +536,7 @@ function createPortalThemePanel(hall, materials) {
   group.add(reveal);
   const themeFrame = new THREE.Mesh(
     new THREE.PlaneGeometry(3.04, .95),
-    createReadableTexture(labelTexture(hall, { small: `${hall.index} 号展厅`, fontSize: 170 }))
+    createReadableTexture(labelTexture(hall, { small: `${hall.index} 号展厅`, fontSize: 104 }))
   );
   themeFrame.position.set(0, 3.24, 6.145);
   faceReadablePlane(themeFrame);
@@ -1931,22 +1953,10 @@ export function buildLobby(scene) {
     architecture.add(column);
   }
 
-  const cornice = new THREE.Mesh(new THREE.TorusGeometry(17.2, .38, 14, 128), materials.stoneLight);
-  cornice.rotation.x = Math.PI / 2;
-  cornice.position.y = 5.65;
-  architecture.add(cornice);
-  const corniceRed = new THREE.Mesh(new THREE.TorusGeometry(16.78, .2, 12, 128), materials.redStone);
-  corniceRed.rotation.x = Math.PI / 2;
-  corniceRed.position.y = 6.02;
-  architecture.add(corniceRed);
-  const corniceGold = new THREE.Mesh(new THREE.TorusGeometry(16.58, .085, 10, 128), materials.gold);
-  corniceGold.rotation.x = Math.PI / 2;
-  corniceGold.position.y = 6.26;
-  architecture.add(corniceGold);
-  const innerCornice = new THREE.Mesh(new THREE.TorusGeometry(13.15, .22, 12, 128), materials.goldSoft);
-  innerCornice.rotation.x = Math.PI / 2;
-  innerCornice.position.y = 5.38;
-  architecture.add(innerCornice);
+  architecture.add(createSegmentedCornice(17.2, .38, 14, 128, materials.stoneLight, 5.65));
+  architecture.add(createSegmentedCornice(16.78, .2, 12, 128, materials.redStone, 6.02));
+  architecture.add(createSegmentedCornice(16.58, .085, 10, 128, materials.gold, 6.26));
+  architecture.add(createSegmentedCornice(13.15, .22, 12, 128, materials.goldSoft, 5.38));
 
   const dome = new THREE.Mesh(
     new THREE.SphereGeometry(17.05, 96, 32, 0, Math.PI * 2, 0, Math.PI / 2 - .11),

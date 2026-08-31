@@ -132,7 +132,7 @@ grep -q 'function createXianPortalDetail' "$ROOT/src/scene.js"
 grep -q 'hall.id === "xian"' "$ROOT/src/scene.js"
 grep -q 'focusTarget' "$ROOT/src/main.js"
 grep -q 'centerpiece' "$ROOT/src/main.js"
-grep -q '20260831-portal-fix2' "$ROOT/index.html"
+grep -q '20260831-portal-fix3' "$ROOT/index.html"
 # --- 本轮门头、团队档案、标志物与弹窗回归契约 ---
 if grep -q 'assets/team/team-photo.jpg' "$ROOT/src/scene.js"; then
   printf '%s\n' "static smoke contract: meeting screenshot must be removed from team wall" >&2
@@ -168,7 +168,7 @@ if sed -n '/function faceReadablePlane/,/^}/p' "$ROOT/src/scene.js" | grep -Eq '
 fi
 grep -q 'const portalRevealDepth = 7.12' "$ROOT/src/scene.js"
 grep -q 'const portalArtworkDepth = 7.28' "$ROOT/src/scene.js"
-grep -q '20260831-portal-fix2' "$ROOT/index.html"
+grep -q '20260831-portal-fix3' "$ROOT/index.html"
 grep -Eq '\.exhibit-panel > \.panel-close.*width: 46px.*height: 46px' "$ROOT/styles.css"
 grep -Eq '\.exhibit-panel__actions \.text-button.*min-height: 46px' "$ROOT/styles.css"
 grep -q 'function bindExhibitPanelActions' "$ROOT/src/main.js"
@@ -244,7 +244,12 @@ grep -q '红脉薪火 · 红色精神数字展馆' "$ROOT/index.html"
 grep -q 'function labelTexture(hall, options' "$ROOT/src/scene.js"
 grep -q '600 \${fontSize}px Songti SC' "$ROOT/src/scene.js"
 grep -q 'labelTexture(hall, { small:' "$ROOT/src/scene.js"
-grep -q 'fontSize: 170' "$ROOT/src/scene.js"
+grep -q 'fontSize: 104' "$ROOT/src/scene.js"
+grep -q 'function createSegmentedCornice' "$ROOT/src/scene.js"
+if grep -q 'new THREE.TorusGeometry(17.2, .38, 14, 128)' "$ROOT/src/scene.js"; then
+  printf '%s\n' "static smoke contract: lobby cornice must leave portal title gaps" >&2
+  exit 1
+fi
 grep -q 'label.position.set(0, 5.6, -.78)' "$ROOT/src/scene.js"
 grep -q 'replace("精神", "展厅")' "$ROOT/src/scene.js"
 grep -q '1792, 533' "$ROOT/src/scene.js"
