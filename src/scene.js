@@ -630,11 +630,11 @@ function createTeamArchive(loader, materials) {
     logoMaterial.needsUpdate = true;
   });
   const logoRim = new THREE.Mesh(new THREE.TorusGeometry(.4, .045, 12, 48), materials.goldSoft);
-  logoRim.position.set(0, 4.82, -.43);
+  logoRim.position.set(-2.72, 4.5, -.43);
   logoRim.rotation.x = Math.PI / 2;
   group.add(logoRim);
   const logo = new THREE.Mesh(new THREE.PlaneGeometry(1.05, 1.05), logoMaterial);
-  logo.position.set(0, 4.82, -.395);
+  logo.position.set(-2.72, 4.5, -.395);
   faceReadablePlane(logo);
   group.add(logo);
   const plaque = new THREE.Mesh(new THREE.PlaneGeometry(2.35, .69), new THREE.MeshBasicMaterial({ map: canvasTexture((ctx, w, h) => {
@@ -643,30 +643,29 @@ function createTeamArchive(loader, materials) {
     ctx.textAlign = "center"; ctx.fillStyle = "#e9d8b5"; ctx.font = "600 55px Songti SC, serif"; ctx.fillText("实践档案", w / 2, 105);
     ctx.fillStyle = "#c9ab72"; ctx.font = "30px PingFang SC, sans-serif"; ctx.fillText("求索红脉薪火实践队", w / 2, 165);
   }, 800, 240), toneMapped: false }));
-  plaque.position.set(0, 3.92, -.36);
+  plaque.position.set(-2.72, 3.42, -.36);
   faceReadablePlane(plaque);
   group.add(plaque);
 
-  // 带旗合影与新补充的纪实照片，共九张，三行三列居中陈列。
+  // 带旗合影与新补充的纪实照片，共八张，以更大的双列四行陈列在档案墙右侧。
   const teamPhotos = [
-    ["flag-photo-1.png", "带旗合影 · 一", -1.62, 2.9],
-    ["extra-3.jpg", "求索红脉薪火实践队在塞罕坝纪念馆合影", 0, 2.9],
-    ["flag-photo-2.png", "带旗合影 · 二", 1.62, 2.9],
-    ["flag-photo-3.png", "带旗合影 · 三", -1.62, 2.05],
-    ["extra-4.jpg", "王何灵完成现场宣讲", 0, 2.05],
-    ["extra-1.jpg", "队员在西迁博物馆参观合影", 1.62, 2.05],
-    ["flag-photo-4.png", "带旗合影 · 四", -1.62, 1.2],
-    ["extra-5.jpg", "队员在馆内壁画前整理宣讲线索", 0, 1.2],
-    ["extra-2.jpg", "实践队员合影", 1.62, 1.2]
+    ["flag-photo-1.png", "带旗合影 · 一", .9, 4.35],
+    ["extra-3.jpg", "求索红脉薪火实践队在塞罕坝纪念馆合影", 2.9, 4.35],
+    ["flag-photo-3.png", "带旗合影 · 三", .9, 3.22],
+    ["extra-4.jpg", "王何灵完成现场宣讲", 2.9, 3.22],
+    ["flag-photo-4.png", "带旗合影 · 四", .9, 2.09],
+    ["extra-1.jpg", "队员在西迁博物馆参观合影", 2.9, 2.09],
+    ["extra-2.jpg", "实践队员合影", .9, .96],
+    ["extra-5.jpg", "队员在馆内壁画前整理宣讲线索", 2.9, .96]
   ];
   const photoHitboxes = [];
   teamPhotos.forEach(([file, photoCaption, x, y]) => {
-    const photoFrame = createExhibitPhotoFit(loader, `./assets/team/${file}`, 1.45, .68, materials);
+    const photoFrame = createExhibitPhotoFit(loader, `./assets/team/${file}`, 1.7, .95, materials);
     photoFrame.position.set(x, y, -.38);
     faceReadablePlane(photoFrame);
     group.add(photoFrame);
     const photoHitbox = new THREE.Mesh(
-      new THREE.BoxGeometry(1.62, .86, .12),
+      new THREE.BoxGeometry(1.9, 1.15, .12),
       new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
     );
     photoHitbox.position.set(x, y, -.3);

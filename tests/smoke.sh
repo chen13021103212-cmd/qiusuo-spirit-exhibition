@@ -211,6 +211,18 @@ fi
 grep -q 'interactive = "team-photo"' "$ROOT/src/scene.js"
 grep -q 'function openPhotoViewer' "$ROOT/src/main.js"
 grep -q 'id="photo-viewer"' "$ROOT/index.html"
-grep -q 'team-emblem.png' "$ROOT/index.html"
+grep -q 'class="brand-mark"' "$ROOT/index.html"
 grep -q 'galleryFootnote' "$ROOT/src/data.js"
+# --- 最后一轮收尾契约（图标还原、照片放大、实践纪实、档案修正）---
+grep -q 'assets/xian/fieldwork.png' "$ROOT/src/data.js"
+grep -q 'assets/saihanba/archive-4.jpg' "$ROOT/src/data.js"
+grep -q '求索红脉薪火实践队在塞罕坝纪念馆合影' "$ROOT/src/data.js"
+grep -q '队员在馆内壁画前整理宣讲线索' "$ROOT/src/data.js"
+test -f "$ROOT/assets/xian/fieldwork.png"
+test -f "$ROOT/assets/saihanba/archive-4.jpg"
+test -f "$ROOT/assets/tibet/archive-4.jpg"
+if grep -q 'flag-photo-2.png' "$ROOT/src/scene.js"; then
+  printf '%s\n' "static smoke contract: 带旗合影二 must be removed" >&2
+  exit 1
+fi
 printf '%s\n' "static smoke contract: pass"

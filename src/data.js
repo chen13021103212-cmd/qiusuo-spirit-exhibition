@@ -123,7 +123,7 @@ export const XIAN_EXHIBITION = {
       label: "实践纪实",
       title: "在文物与镜头之间重走西迁路",
       kicker: "2026.07.23—07.27 · 求索红脉薪火实践队",
-      image: "./assets/xian/documentary-2.jpg",
+      image: "./assets/xian/fieldwork.png",
       copy: "2026年7月23日至7月27日，北京师范大学马克思主义学院求索红脉薪火实践队抵达暑期社会实践调研第一站，走进西安交通大学西迁博物馆开展实地调研、主题宣讲拍摄与沉浸式研学。队员们研读老照片、文字史料和馆藏实物，将人物故事与现场展陈一一对应。",
       points: ["实地调研：研读老照片、文字史料和馆藏实物", "点位勘景：在肖像墙、人物展柜和复原场景之间匹配机位", "协作拍摄：调试灯光、收音、三脚架并反复补录", "青年表达：以当代话语讲述先辈选择，完成行走的思政课"]
     },
@@ -246,16 +246,18 @@ export const SAIHANBA_EXHIBITION = {
   quote: "牢记使命、艰苦创业、绿色发展",
   lead: "三代建设者听从党的召唤，在“黄沙遮天日，飞鸟无栖树”的荒漠沙地上艰苦奋斗、甘于奉献，用半个多世纪创造了荒原变林海的人间奇迹。",
   gallery: [
+    "./assets/saihanba/archive-3.jpg",
     "./assets/saihanba/archive-1.png",
     "./assets/saihanba/archive-2.jpg",
-    "./assets/saihanba/archive-3.jpg"
+    "./assets/saihanba/archive-4.jpg"
   ],
   galleryTitle: "塞罕坝影像档案",
   galleryKicker: "研学 · 拍摄 · 青年表达",
   galleryCaptions: [
+    "队员参观学习塞罕坝精神",
     "李程亮在塞罕坝展览馆录制宣讲片段",
     "陈宇在尚海纪念林完成宣讲",
-    "队员参观学习塞罕坝精神"
+    "求索红脉薪火实践队在塞罕坝纪念馆合影"
   ],
   galleryFootnote: "从一棵树到一片海，队员在塞罕坝记录绿色奇迹",
   sections: [
@@ -310,16 +312,16 @@ export const TIBET_EXHIBITION = {
   gallery: [
     "./assets/tibet/archive-1.jpg",
     "./assets/tibet/archive-2.jpg",
-    "./assets/tibet/archive-3.jpg",
-    "./assets/tibet/archive-4.jpg"
+    "./assets/tibet/archive-4.jpg",
+    "./assets/tibet/archive-3.jpg"
   ],
   galleryTitle: "老西藏影像档案",
   galleryKicker: "研学 · 拍摄 · 青年表达",
   galleryCaptions: [
     "摄制组调试机位、拍摄设备",
     "队员参观学习",
-    "求索红脉薪火实践队在孔繁森纪念馆留下合影",
-    "求索红脉薪火实践队在塞罕坝纪念馆合影"
+    "队员在馆内壁画前整理宣讲线索",
+    "求索红脉薪火实践队在孔繁森纪念馆留下合影"
   ],
   galleryFootnote: "从孔繁森纪念馆到实地宣讲，记录老西藏精神的青年传承",
   sections: [
