@@ -112,7 +112,8 @@ function surfaceTexture(base, veins, speckles, repeat = [3, 3]) {
   return texture;
 }
 
-function labelTexture(hall, fontSize = 150) {
+function labelTexture(hall, options = {}) {
+  const { small = "", name = hall.name, fontSize = 150 } = options;
   return canvasTexture((ctx, width, height) => {
     ctx.fillStyle = "#2b1b16";
     ctx.fillRect(0, 0, width, height);
@@ -120,10 +121,15 @@ function labelTexture(hall, fontSize = 150) {
     ctx.lineWidth = 3;
     ctx.strokeRect(24, 24, width - 48, height - 48);
     ctx.textAlign = "center";
+    if (small) {
+      ctx.fillStyle = "#dec892";
+      ctx.font = "500 44px Songti SC, STSong, serif";
+      ctx.fillText(small, width / 2, 104);
+    }
     ctx.fillStyle = "#f4e4c1";
     ctx.font = `600 ${fontSize}px Songti SC, STSong, serif`;
-    const baseline = (height + fontSize * .72) / 2;
-    ctx.fillText(hall.name, width / 2, baseline);
+    const baseline = small ? height - 58 : (height + fontSize * .72) / 2;
+    ctx.fillText(name, width / 2, baseline);
   }, 1600, 500);
 }
 
@@ -417,10 +423,6 @@ function createArch(materials, hall) {
   const archAccent = new THREE.Mesh(new THREE.TorusGeometry(2.25, .075, 10, 72, Math.PI), materials.gold);
   archAccent.position.set(0, 3.83, -.8);
   group.add(archAccent);
-  const keystone = new THREE.Mesh(new THREE.BoxGeometry(.62, .78, .48), materials.goldSoft);
-  keystone.position.set(0, 6.02, -.32);
-  keystone.rotation.z = Math.PI / 4;
-  group.add(keystone);
   const header = new THREE.Mesh(new THREE.BoxGeometry(5.65, .34, 1.55), materials.redStone);
   header.position.set(0, 6.82, .02);
   group.add(header);
@@ -476,12 +478,12 @@ function createArch(materials, hall) {
   farWall.rotation.y = Math.PI;
   group.add(farWall);
   group.add(createPortalThemePanel(hall, materials));
-  const label = new THREE.Mesh(new THREE.PlaneGeometry(3.02, .94), createReadableTexture(labelTexture(hall)));
-  label.position.set(0, 6.05, -.78);
+  const label = new THREE.Mesh(new THREE.PlaneGeometry(3.02, .94), createReadableTexture(labelTexture(hall, { name: hall.name.replace("精神", "展厅") })));
+  label.position.set(0, 5.6, -.78);
   faceReadablePlane(label);
   group.add(label);
   const plaqueBack = new THREE.Mesh(new THREE.BoxGeometry(3.34, 1.04, .12), materials.wood);
-  plaqueBack.position.set(0, 6.05, -.68);
+  plaqueBack.position.set(0, 5.6, -.68);
   group.add(plaqueBack);
   const point = new THREE.PointLight(hall.glow, 6.2, 9.5, 1.8);
   point.position.set(0, 3.4, 2.5);
@@ -512,7 +514,7 @@ function createPortalThemePanel(hall, materials) {
   group.add(reveal);
   const themeFrame = new THREE.Mesh(
     new THREE.PlaneGeometry(3.04, .95),
-    createReadableTexture(labelTexture(hall, 190))
+    createReadableTexture(labelTexture(hall, { small: `${hall.index} 号展厅`, fontSize: 170 }))
   );
   themeFrame.position.set(0, 3.24, 6.145);
   faceReadablePlane(themeFrame);
