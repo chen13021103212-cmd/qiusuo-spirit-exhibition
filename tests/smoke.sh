@@ -245,6 +245,8 @@ grep -q 'data-goatcounter="https://fish.goatcounter.com/count"' "$ROOT/index.htm
 grep -q 'no_onload: true' "$ROOT/index.html"
 grep -q 'goatcounter.count({ no_session: true })' "$ROOT/index.html"
 grep -q 'cache: "no-store"' "$ROOT/src/main.js"
+grep -q 'setInterval(loadViewCount, 15000)' "$ROOT/src/main.js"
+grep -q 'visibilitychange' "$ROOT/src/main.js"
 # --- 更名、门头小字与内涵排版契约 ---
 grep -q '红脉薪火 · 红色精神数字展馆' "$ROOT/index.html"
 grep -q 'function labelTexture(hall, options' "$ROOT/src/scene.js"

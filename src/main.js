@@ -659,35 +659,69 @@ musicToggle.addEventListener("click", event => {
 });
 
 // --- 浏览人次：右下角小眼睛按钮，点击显示站点累计页面打开次数 ---
+let viewCountTimer = null;
+let viewCountRequest = null;
+
 async function loadViewCount() {
+  if (viewCountRequest) return viewCountRequest;
   const code = window.GOAT_COUNTER_CODE || "";
   if (!code) {
     viewCountValue.textContent = "—";
-    return;
+    return Promise.resolve();
   }
-  try {
-    const counterPath = encodeURIComponent(window.location.pathname);
-    const response = await fetch(`https://${code}.goatcounter.com/counter/${counterPath}.json?_=${Date.now()}`, {
-      mode: "cors",
-      cache: "no-store"
-    });
-    if (!response.ok) throw new Error(String(response.status));
-    const data = await response.json();
-    viewCountValue.textContent = String(data.count || "0");
-  } catch (error) {
-    viewCountValue.textContent = "—";
-  }
+  viewCountRequest = (async () => {
+    try {
+      const counterPath = encodeURIComponent(window.location.pathname);
+      const response = await fetch(`https://${code}.goatcounter.com/counter/${counterPath}.json?_=${Date.now()}`, {
+        mode: "cors",
+        cache: "no-store"
+      });
+      if (!response.ok) throw new Error(String(response.status));
+      const data = await response.json();
+      viewCountValue.textContent = String(data.count || "0");
+    } catch (error) {
+      viewCountValue.textContent = "—";
+    } finally {
+      viewCountRequest = null;
+    }
+  })();
+  return viewCountRequest;
 }
+
+function startViewCountRefresh() {
+  if (viewCountTimer) return;
+  loadViewCount();
+  viewCountTimer = window.setInterval(loadViewCount, 15000);
+}
+
+function stopViewCountRefresh() {
+  if (!viewCountTimer) return;
+  window.clearInterval(viewCountTimer);
+  viewCountTimer = null;
+}
+
 viewCountToggle.addEventListener("click", async () => {
   const willShow = viewCountPopup.hidden;
   viewCountPopup.hidden = !willShow;
   if (willShow) {
     viewCountValue.textContent = "…";
-    loadViewCount();
+    startViewCountRefresh();
+  } else {
+    stopViewCountRefresh();
   }
 });
 document.addEventListener("pointerdown", event => {
-  if (!viewCountPopup.hidden && !viewCountPopup.contains(event.target) && event.target !== viewCountToggle) {
+  if (!viewCountPopup.hidden && !viewCountPopup.contains(event.target) && !viewCountToggle.contains(event.target)) {
     viewCountPopup.hidden = true;
+    stopViewCountRefresh();
+  }
+});
+document.addEventListener("visibilitychange", () => {
+  if (viewCountPopup.hidden) return;
+  if (document.visibilityState === "visible") {
+    loadViewCount();
+    startViewCountRefresh();
+  } else {
+    stopViewCountRefresh();
   }
 });
