@@ -614,41 +614,27 @@ function createXianPortalDetail(materials) {
 function createTeamArchive(loader, materials) {
   const group = new THREE.Group();
   group.name = "团队档案墙";
-  const wall = new THREE.Mesh(new THREE.BoxGeometry(9.2, 4.9, .46), materials.wood);
-  wall.position.y = 2.55;
+  const wall = new THREE.Mesh(new THREE.BoxGeometry(9.2, 5.6, .46), materials.wood);
+  wall.position.y = 2.8;
   group.add(wall);
-  const inner = new THREE.Mesh(new THREE.BoxGeometry(8.72, 4.42, .5), materials.stoneDark);
-  inner.position.set(0, 2.55, -.08);
+  const inner = new THREE.Mesh(new THREE.BoxGeometry(8.72, 5.12, .5), materials.stoneDark);
+  inner.position.set(0, 2.8, -.08);
   group.add(inner);
 
-  // 四张带旗合影，以对称双列小框居中陈列
-  const flagPhotos = [
-    ["flag-photo-1.png", -1.15, 3.42],
-    ["flag-photo-2.png", 1.15, 3.42],
-    ["flag-photo-3.png", -1.15, 2.32],
-    ["flag-photo-4.png", 1.15, 2.32]
-  ];
-  flagPhotos.forEach(([file, x, y]) => {
-    const flagFrame = createExhibitPhotoFit(loader, `./assets/team/${file}`, 1.5, .95, materials);
-    flagFrame.position.set(x, y, -.38);
-    faceReadablePlane(flagFrame);
-    group.add(flagFrame);
-  });
-
-  // 队名 Logo（透明底）+ 金色徽环
+  // 队标：更大更醒目，金色圆环衬在图案后方环绕，不遮挡队标本身。
   const logoMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, alphaTest: .08, depthWrite: false, toneMapped: false, side: THREE.FrontSide });
-  loader.load("./assets/team/team-logo.png", texture => {
+  loader.load("./assets/team/team-emblem.png", texture => {
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.anisotropy = 8;
     logoMaterial.map = texture;
     logoMaterial.needsUpdate = true;
   });
-  const logoRim = new THREE.Mesh(new THREE.TorusGeometry(.3, .03, 10, 48), materials.goldSoft);
-  logoRim.position.set(0, 4.35, -.36);
+  const logoRim = new THREE.Mesh(new THREE.TorusGeometry(.4, .045, 12, 48), materials.goldSoft);
+  logoRim.position.set(0, 4.82, -.43);
   logoRim.rotation.x = Math.PI / 2;
   group.add(logoRim);
-  const logo = new THREE.Mesh(new THREE.PlaneGeometry(.5, .526), logoMaterial);
-  logo.position.set(0, 4.35, -.395);
+  const logo = new THREE.Mesh(new THREE.PlaneGeometry(1.05, 1.05), logoMaterial);
+  logo.position.set(0, 4.82, -.395);
   faceReadablePlane(logo);
   group.add(logo);
   const plaque = new THREE.Mesh(new THREE.PlaneGeometry(2.35, .69), new THREE.MeshBasicMaterial({ map: canvasTexture((ctx, w, h) => {
@@ -657,14 +643,45 @@ function createTeamArchive(loader, materials) {
     ctx.textAlign = "center"; ctx.fillStyle = "#e9d8b5"; ctx.font = "600 55px Songti SC, serif"; ctx.fillText("实践档案", w / 2, 105);
     ctx.fillStyle = "#c9ab72"; ctx.font = "30px PingFang SC, sans-serif"; ctx.fillText("求索红脉薪火实践队", w / 2, 165);
   }, 800, 240), toneMapped: false }));
-  plaque.position.set(0, 1.3, -.36);
+  plaque.position.set(0, 3.92, -.36);
   faceReadablePlane(plaque);
   group.add(plaque);
-  const hitbox = new THREE.Mesh(new THREE.BoxGeometry(9.3, 5.2, .7), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false }));
-  hitbox.position.y = 2.6;
+
+  // 带旗合影与新补充的纪实照片，共九张，三行三列居中陈列。
+  const teamPhotos = [
+    ["flag-photo-1.png", "带旗合影 · 一", -1.62, 2.9],
+    ["extra-3.jpg", "求索红脉薪火实践队在塞罕坝纪念馆合影", 0, 2.9],
+    ["flag-photo-2.png", "带旗合影 · 二", 1.62, 2.9],
+    ["flag-photo-3.png", "带旗合影 · 三", -1.62, 2.05],
+    ["extra-4.jpg", "王何灵完成现场宣讲", 0, 2.05],
+    ["extra-1.jpg", "队员在西迁博物馆参观合影", 1.62, 2.05],
+    ["flag-photo-4.png", "带旗合影 · 四", -1.62, 1.2],
+    ["extra-5.jpg", "队员在馆内壁画前整理宣讲线索", 0, 1.2],
+    ["extra-2.jpg", "实践队员合影", 1.62, 1.2]
+  ];
+  const photoHitboxes = [];
+  teamPhotos.forEach(([file, photoCaption, x, y]) => {
+    const photoFrame = createExhibitPhotoFit(loader, `./assets/team/${file}`, 1.45, .68, materials);
+    photoFrame.position.set(x, y, -.38);
+    faceReadablePlane(photoFrame);
+    group.add(photoFrame);
+    const photoHitbox = new THREE.Mesh(
+      new THREE.BoxGeometry(1.62, .86, .12),
+      new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
+    );
+    photoHitbox.position.set(x, y, -.3);
+    photoHitbox.userData.interactive = "team-photo";
+    photoHitbox.userData.photo = { image: `./assets/team/${file}`, caption: photoCaption };
+    group.add(photoHitbox);
+    photoHitboxes.push(photoHitbox);
+  });
+
+  const hitbox = new THREE.Mesh(new THREE.BoxGeometry(9.3, 5.8, .7), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false }));
+  hitbox.position.y = 2.8;
   hitbox.userData.interactive = "team";
   group.add(hitbox);
   group.userData.hitbox = hitbox;
+  group.userData.photoHitboxes = photoHitboxes;
   return group;
 }
 
@@ -996,37 +1013,39 @@ function createTrackLight(materials, x, z, targetX, targetZ) {
   return { group, light };
 }
 
-function createPhotoWall(loader, materials) {
+function createPhotoWall(loader, materials, { title, kicker, items, footnote }) {
   const group = new THREE.Group();
-  const backing = new THREE.Mesh(new THREE.BoxGeometry(12.8, 4.35, .2), materials.xianWood);
+  const galleryWidth = 2.28;
+  const galleryGap = 2.48;
+  const span = (items.length - 1) * galleryGap + galleryWidth;
+  const backingWidth = Math.max(8.6, span + .52);
+  const backing = new THREE.Mesh(new THREE.BoxGeometry(backingWidth, 4.35, .2), materials.xianWood);
   backing.position.y = 3.02;
   group.add(backing);
   const header = new THREE.Mesh(
     new THREE.PlaneGeometry(4.4, .72),
-    new THREE.MeshBasicMaterial({ map: exhibitTextTexture(XIAN_EXHIBITION.galleryTitle, "研学 · 拍摄 · 青年表达"), toneMapped: false })
+    new THREE.MeshBasicMaterial({ map: exhibitTextTexture(title, kicker), toneMapped: false })
   );
-  header.position.set(-3.9, 5.08, .115);
+  header.position.set(-backingWidth / 2 + 2.5, 5.08, .115);
   group.add(header);
-  const galleryWidth = 2.28;
-  const galleryGap = 2.48;
-  const galleryStart = -4.96;
-  XIAN_EXHIBITION.gallery.forEach((path, index) => {
-    const photo = createXianPhoto(loader, path, galleryWidth, 1.78, materials);
+  const galleryStart = -(items.length - 1) * galleryGap / 2;
+  items.forEach((item, index) => {
+    const photo = createXianPhoto(loader, item.image, galleryWidth, 1.78, materials);
     const photoX = galleryStart + index * galleryGap;
     photo.position.set(photoX, 3.05, .15);
     group.add(photo);
-    const photoCaption = createPhotoCaption(XIAN_EXHIBITION.galleryCaptions[index], galleryWidth);
+    const photoCaption = createPhotoCaption(item.caption, galleryWidth);
     photoCaption.position.set(photoX, 1.56, .155);
     group.add(photoCaption);
   });
   const caption = new THREE.Mesh(
-    new THREE.PlaneGeometry(11.5, .56),
+    new THREE.PlaneGeometry(backingWidth - 1.3, .56),
     new THREE.MeshBasicMaterial({ map: canvasTexture((ctx, width, height) => {
       ctx.fillStyle = "#e7dfd0";
       ctx.fillRect(0, 0, width, height);
       ctx.fillStyle = "#4a332c";
       ctx.font = "600 29px Kaiti SC, STKaiti, KaiTi, BiauKai, serif";
-      ctx.fillText("从研读馆藏到完成宣讲拍摄，青年在历史现场理解西迁选择", 42, 62);
+      ctx.fillText(footnote, 42, 62);
     }, 1200, 110), toneMapped: false })
   );
   caption.position.set(0, .98, .125);
@@ -1311,7 +1330,15 @@ export function buildXianExhibition(scene) {
     root.add(node);
     exhibits.push(node);
   });
-  const photoWall = createPhotoWall(loader, materials);
+  const photoWall = createPhotoWall(loader, materials, {
+    title: XIAN_EXHIBITION.galleryTitle,
+    kicker: "研学 · 拍摄 · 青年表达",
+    items: XIAN_EXHIBITION.gallery.map((image, index) => ({
+      image,
+      caption: XIAN_EXHIBITION.galleryCaptions[index]
+    })),
+    footnote: "从研读馆藏到完成宣讲拍摄，青年在历史现场理解西迁选择"
+  });
   photoWall.position.set(0, 0, -8.72);
   root.add(photoWall);
   const timelinePlinth = createXianTimelinePlinth(materials, loader);
@@ -1719,6 +1746,21 @@ export function buildCompactHall(scene, exhibition, kind) {
   title.group.position.set(0, 0, depth / 2 - .4);
   root.add(title.group);
 
+  // 入口背后的空腔：为备有影像档案的展馆加挂一面现场影像档案墙。
+  if (exhibition.gallery?.length) {
+    const archiveWall = createPhotoWall(loader, materials, {
+      title: exhibition.galleryTitle,
+      kicker: exhibition.galleryKicker || "研学 · 拍摄 · 青年表达",
+      items: exhibition.gallery.map((image, index) => ({
+        image,
+        caption: exhibition.galleryCaptions[index]
+      })),
+      footnote: exhibition.galleryFootnote || ""
+    });
+    archiveWall.position.set(0, 0, -depth / 2 + .35);
+    root.add(archiveWall);
+  }
+
   const exhibits = [];
   const photoLift = kind === "snow" ? 0 : .16;
   const positions = [
@@ -1948,6 +1990,7 @@ export function buildLobby(scene) {
   archive.rotation.y = 0;
   architecture.add(archive);
   interactives.push(archive.userData.hitbox);
+  interactives.push(...(archive.userData.photoHitboxes || []));
   addPedestal(architecture, -5.55, 14.6, 1.12, materials);
   const route = createRouteRelief(materials);
   route.position.set(-5.55, 1.3, 14.6);

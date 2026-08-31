@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#5b241d" />
     <title>精神谱系线上展厅 · 中央大厅</title>
-    <link rel="stylesheet" href="./styles.css?v=20260831-final-polish" />
+    <link rel="stylesheet" href="./styles.css?v=20260831-gallery-pass" />
     <script type="importmap">
       {
         "imports": {
@@ -19,7 +19,7 @@
       <div id="scene" aria-hidden="true"></div>
 
       <header class="masthead">
-        <div class="brand-mark" aria-hidden="true"><span></span></div>
+        <div class="brand-mark" aria-hidden="true"><img src="./assets/team/team-emblem.png" alt="" /></div>
         <div>
           <p>求索红脉薪火实践队</p>
           <h1>精神谱系线上展厅</h1>
@@ -111,8 +111,14 @@
         </div>
       </section>
 
+      <section id="photo-viewer" class="photo-viewer" role="dialog" aria-modal="true" aria-label="照片放大查看" hidden>
+        <button class="panel-close" id="photo-viewer-close" type="button" aria-label="关闭大图">×</button>
+        <img id="photo-viewer-image" alt="" />
+        <p id="photo-viewer-caption"></p>
+      </section>
+
       <noscript>此展厅需要启用 JavaScript 才能运行。</noscript>
     </main>
-    <script type="module" src="./src/main.js?v=20260831-final-polish"></script>
+    <script type="module" src="./src/main.js?v=20260831-gallery-pass"></script>
   </body>
 </html>

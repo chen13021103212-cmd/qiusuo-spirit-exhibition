@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { HALLS, TEAM_ARCHIVE, LIANGLU_EXHIBITION, LIANGDAN_EXHIBITION, SAIHANBA_EXHIBITION, TIBET_EXHIBITION } from "./data.js?v=20260831-final-polish";
-import { buildLobby, updateLobby, buildXianExhibition, updateXianExhibition, buildCompactHall, updateCompactHall } from "./scene.js?v=20260831-final-polish";
+import { HALLS, TEAM_ARCHIVE, LIANGLU_EXHIBITION, LIANGDAN_EXHIBITION, SAIHANBA_EXHIBITION, TIBET_EXHIBITION } from "./data.js?v=20260831-gallery-pass";
+import { buildLobby, updateLobby, buildXianExhibition, updateXianExhibition, buildCompactHall, updateCompactHall } from "./scene.js?v=20260831-gallery-pass";
 
 const container = document.querySelector("#scene");
 const loading = document.querySelector("#loading");
@@ -20,6 +20,10 @@ const exhibitBehindScenes = document.querySelector("#exhibit-behind-scenes");
 const exhibitClose = document.querySelector("#exhibit-close");
 const exhibitReturn = document.querySelector("#exhibit-return");
 const exhibitLobbyReturn = document.querySelector("#exhibit-lobby-return");
+const photoViewer = document.querySelector("#photo-viewer");
+const photoViewerImage = document.querySelector("#photo-viewer-image");
+const photoViewerCaption = document.querySelector("#photo-viewer-caption");
+const photoViewerClose = document.querySelector("#photo-viewer-close");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 HALLS.forEach(hall => {
@@ -220,7 +224,24 @@ function openInfo(data, kind = "hall") {
 function closePanels() {
   infoPanel.hidden = true;
   helpPanel.hidden = true;
+  closePhotoViewer();
   closeExhibitPanel();
+}
+
+function openPhotoViewer(photo) {
+  photoViewerImage.src = photo.image;
+  photoViewerImage.alt = photo.caption;
+  photoViewerCaption.textContent = photo.caption;
+  photoViewer.hidden = false;
+  photoViewerClose.focus();
+}
+
+function closePhotoViewer() {
+  if (!photoViewer.hidden) {
+    photoViewer.hidden = true;
+    photoViewerImage.removeAttribute("src");
+    renderer.domElement.focus?.({ preventScroll: true });
+  }
 }
 
 function closeExhibitPanel(event) {
@@ -366,6 +387,7 @@ renderer.domElement.addEventListener("pointerup", event => {
     while (object && !object.userData.interactive) object = object.parent;
     if (object?.userData.interactive === "hall") openInfo(object.userData.hall);
     if (object?.userData.interactive === "team") openInfo(TEAM_ARCHIVE, "team");
+    if (object?.userData.interactive === "team-photo") openPhotoViewer(object.userData.photo);
     if (object?.userData.interactive === "xian-exhibit") openExhibit(object.userData.exhibit);
     if (object?.userData.interactive === "centerpiece-focus") focusCompactTitleWall();
     return;

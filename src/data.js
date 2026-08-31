@@ -33,7 +33,7 @@ export const HALLS = [
     angle: -34,
     motif: "mountain",
     summary: "从十八军进藏到孔繁森援藏，展厅已接入精神内涵、历史故事、人物群像与在聊城孔繁森纪念馆完成的宣讲影像。",
-    tags: ["山东聊城录制", "实地素材", "民族团结"]
+    tags: ["山东聊城录制", "民族团结"]
   },
   {
     id: "lianglu",
@@ -45,7 +45,7 @@ export const HALLS = [
     angle: 146,
     motif: "road",
     summary: "川藏、青藏公路建设者以血肉之躯劈开天险。作为云上研学馆，本馆将以宣讲稿、史料与数字化路线叙事为核心。",
-    tags: ["云上研学馆", "宣讲稿", "天路叙事"]
+    tags: ["云上研学馆", "天路叙事"]
   },
   {
     id: "liangdan",
@@ -57,7 +57,7 @@ export const HALLS = [
     angle: 34,
     motif: "orbit",
     summary: "在隐姓埋名与自力更生中托举大国重器。作为云上致敬馆，本馆将以宣讲稿、科学家群像与沉浸式星轨叙事展开。",
-    tags: ["云上致敬馆", "宣讲稿", "科学家群像"]
+    tags: ["云上致敬馆", "科学家群像"]
   }
 ];
 
@@ -78,25 +78,25 @@ export const XIAN_EXHIBITION = {
   lead: "一场跨越千里的战略大迁徙，把个人理想嵌入国家发展的坐标，也在西北大地上铸就了胸怀大局、无私奉献、弘扬传统、艰苦创业的精神品格。",
   gallery: [
     "./assets/xian/documentary-6.jpg",
-    "./assets/xian/documentary-4.jpg",
-    "./assets/xian/documentary-5.jpg",
-    "./assets/xian/documentary-8.jpg",
+    "./assets/xian/yuhuawei.jpg",
+    "./assets/xian/wangheling.jpg",
+    "./assets/xian/organize.jpg",
     "./assets/xian/documentary-9.jpg"
   ],
   galleryTitle: "西迁现场影像档案",
   galleryCaptions: [
     "在西迁人物群像前重读先辈选择",
-    "摄制组调试机位、收音与补光设备",
-    "于华玮、王何灵完成现场主题宣讲",
-    "队员在先辈雕塑与历史影像前整理宣讲线索",
+    "于华玮完成现场主题宣讲",
+    "王何灵完成现场主题宣讲",
+    "队员整理宣讲线索",
     "求索红脉薪火实践队在西迁博物馆留下合影"
   ],
   assetSources: {
-    "./assets/xian/documentary-4.jpg": "原始素材：111-66.jpg",
-    "./assets/xian/documentary-5.jpg": "原始素材：111-71.jpg",
     "./assets/xian/documentary-6.jpg": "原始素材：111-7.jpg",
-    "./assets/xian/documentary-8.jpg": "原始素材：mmexport1785313097526.jpg",
-    "./assets/xian/documentary-9.jpg": "原始素材：111-70.jpg"
+    "./assets/xian/documentary-9.jpg": "原始素材：111-70.jpg",
+    "./assets/xian/yuhuawei.jpg": "原始素材：于华玮完成现场宣讲.jpg",
+    "./assets/xian/wangheling.jpg": "原始素材：王何灵完成现场宣讲.jpg",
+    "./assets/xian/organize.jpg": "原始素材：队员整理宣讲线索.jpg"
   },
   sections: [
     {
@@ -114,7 +114,7 @@ export const XIAN_EXHIBITION = {
       label: "历史故事",
       title: "6000余名师生的共同选择",
       kicker: "1955—1956 · 从决定到扎根",
-      image: "./assets/xian/documentary-1.jpg",
+      image: "./assets/xian/history.png",
       copy: "1955年4月，党中央、国务院从国家战略布局和西部工业发展需要出发，作出交通大学内迁西安的决定。至1956年9月，包括815名教职工、3900余名学生在内的6000多名师生陆续汇聚西安，在西北大地展开办学与创业。真正让这段历史立起来的，是一个个把国家需要置于个人得失之前的名字。",
       points: ["1896年：交通大学前身南洋公学创办于上海", "1955年4月：党中央、国务院作出交通大学内迁西安的决定", "1955—1956年：人员、仪器、图书和教学设备陆续西迁", "钟兆琳：婉拒留沪照料家人的安排，孤身赴陕办校扎根", "陈学俊：携四名幼子西迁、上交上海房产，从零创建动力工程实验室", "沈云扉：66岁时举家随校西迁，以“交大在哪儿我就在哪儿”回应国家召唤", "朱城：创办工程力学专业，编写急需教材，投身艰苦创业", "截至1956年9月：6000多名师生陆续汇聚西安，开启建校创业"]
     },
@@ -245,6 +245,19 @@ export const SAIHANBA_EXHIBITION = {
   subtitle: "塞罕坝精神",
   quote: "牢记使命、艰苦创业、绿色发展",
   lead: "三代建设者听从党的召唤，在“黄沙遮天日，飞鸟无栖树”的荒漠沙地上艰苦奋斗、甘于奉献，用半个多世纪创造了荒原变林海的人间奇迹。",
+  gallery: [
+    "./assets/saihanba/archive-1.png",
+    "./assets/saihanba/archive-2.jpg",
+    "./assets/saihanba/archive-3.jpg"
+  ],
+  galleryTitle: "塞罕坝影像档案",
+  galleryKicker: "研学 · 拍摄 · 青年表达",
+  galleryCaptions: [
+    "李程亮在塞罕坝展览馆录制宣讲片段",
+    "陈宇在尚海纪念林完成宣讲",
+    "队员参观学习塞罕坝精神"
+  ],
+  galleryFootnote: "从一棵树到一片海，队员在塞罕坝记录绿色奇迹",
   sections: [
     {
       id: "meaning",
@@ -294,6 +307,21 @@ export const TIBET_EXHIBITION = {
   subtitle: "老西藏精神",
   quote: "特别能吃苦、特别能战斗、特别能忍耐、特别能团结、特别能奉献",
   lead: "在世界屋脊青藏高原，有一座镌刻着中国共产党人初心使命与民族团结璀璨光芒的精神丰碑，这就是“老西藏精神”。",
+  gallery: [
+    "./assets/tibet/archive-1.jpg",
+    "./assets/tibet/archive-2.jpg",
+    "./assets/tibet/archive-3.jpg",
+    "./assets/tibet/archive-4.jpg"
+  ],
+  galleryTitle: "老西藏影像档案",
+  galleryKicker: "研学 · 拍摄 · 青年表达",
+  galleryCaptions: [
+    "摄制组调试机位、拍摄设备",
+    "队员参观学习",
+    "求索红脉薪火实践队在孔繁森纪念馆留下合影",
+    "求索红脉薪火实践队在塞罕坝纪念馆合影"
+  ],
+  galleryFootnote: "从孔繁森纪念馆到实地宣讲，记录老西藏精神的青年传承",
   sections: [
     {
       id: "meaning",

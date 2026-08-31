@@ -38,7 +38,7 @@ grep -q "createXianCoveLighting" "$ROOT/src/scene.js"
 grep -q "createXianDisplayPlinth" "$ROOT/src/scene.js"
 grep -q "createXianWallBay" "$ROOT/src/scene.js"
 grep -q "createMuseumBench" "$ROOT/src/scene.js"
-grep -q "documentary-8.jpg" "$ROOT/src/data.js"
+grep -q "organize.jpg" "$ROOT/src/data.js"
 grep -q "galleryCaptions" "$ROOT/src/data.js"
 grep -q "西迁现场影像" "$ROOT/src/data.js"
 grep -q "西迁精神.mp4" "$ROOT/src/data.js"
@@ -53,7 +53,7 @@ grep -q "钟兆琳" "$ROOT/src/data.js"
 grep -q "陈学俊" "$ROOT/src/data.js"
 grep -q "assetSources" "$ROOT/src/data.js"
 grep -q "111-70.jpg" "$ROOT/src/data.js"
-grep -q "111-66.jpg" "$ROOT/src/data.js"
+grep -q "111-70.jpg" "$ROOT/src/data.js"
 test -f "$ROOT/assets/xian/cover-1.png"
 test -f "$ROOT/assets/xian/documentary-1.jpg"
 test -f "$ROOT/assets/xian/documentary-9.jpg"
@@ -132,13 +132,13 @@ grep -q 'function createXianPortalDetail' "$ROOT/src/scene.js"
 grep -q 'hall.id === "xian"' "$ROOT/src/scene.js"
 grep -q 'focusTarget' "$ROOT/src/main.js"
 grep -q 'centerpiece' "$ROOT/src/main.js"
-grep -q '20260831-final-polish' "$ROOT/index.html"
+grep -q '20260831-gallery-pass' "$ROOT/index.html"
 # --- 本轮门头、团队档案、标志物与弹窗回归契约 ---
 if grep -q 'assets/team/team-photo.jpg' "$ROOT/src/scene.js"; then
   printf '%s\n' "static smoke contract: meeting screenshot must be removed from team wall" >&2
   exit 1
 fi
-grep -q 'assets/team/team-logo.png' "$ROOT/src/scene.js"
+grep -q 'assets/team/team-emblem.png' "$ROOT/src/scene.js"
 grep -q 'createTeamArchive(loader' "$ROOT/src/scene.js"
 grep -q 'function createReadableTexture' "$ROOT/src/scene.js"
 grep -q 'faceReadablePlane(label)' "$ROOT/src/scene.js"
@@ -168,7 +168,7 @@ if sed -n '/function faceReadablePlane/,/^}/p' "$ROOT/src/scene.js" | grep -Eq '
 fi
 grep -q 'const portalRevealDepth = 7.12' "$ROOT/src/scene.js"
 grep -q 'const portalArtworkDepth = 7.28' "$ROOT/src/scene.js"
-grep -q '20260831-final-polish' "$ROOT/index.html"
+grep -q '20260831-gallery-pass' "$ROOT/index.html"
 grep -Eq '\.exhibit-panel > \.panel-close.*width: 46px.*height: 46px' "$ROOT/styles.css"
 grep -Eq '\.exhibit-panel__actions \.text-button.*min-height: 46px' "$ROOT/styles.css"
 grep -q 'function bindExhibitPanelActions' "$ROOT/src/main.js"
@@ -189,4 +189,28 @@ test -f "$ROOT/assets/team/flag-photo-1.png"
 test -f "$ROOT/assets/team/flag-photo-2.png"
 test -f "$ROOT/assets/team/flag-photo-3.png"
 test -f "$ROOT/assets/team/flag-photo-4.png"
+# --- 本轮图片与档案墙更新契约 ---
+grep -q 'assets/xian/history.png' "$ROOT/src/data.js"
+grep -q 'assets/xian/yuhuawei.jpg' "$ROOT/src/data.js"
+grep -q 'assets/xian/wangheling.jpg' "$ROOT/src/data.js"
+grep -q '于华玮完成现场主题宣讲' "$ROOT/src/data.js"
+grep -q '王何灵完成现场主题宣讲' "$ROOT/src/data.js"
+grep -q '队员整理宣讲线索' "$ROOT/src/data.js"
+grep -q 'galleryTitle: "塞罕坝影像档案"' "$ROOT/src/data.js"
+grep -q 'galleryTitle: "老西藏影像档案"' "$ROOT/src/data.js"
+grep -q 'assets/saihanba/archive-1.png' "$ROOT/src/data.js"
+grep -q 'assets/tibet/archive-4.jpg' "$ROOT/src/data.js"
+if grep -q '"宣讲稿"' "$ROOT/src/data.js"; then
+  printf '%s\n' "static smoke contract: hall tag 宣讲稿 must be removed" >&2
+  exit 1
+fi
+if grep -q '"实地素材"' "$ROOT/src/data.js"; then
+  printf '%s\n' "static smoke contract: hall tag 实地素材 must be removed" >&2
+  exit 1
+fi
+grep -q 'interactive = "team-photo"' "$ROOT/src/scene.js"
+grep -q 'function openPhotoViewer' "$ROOT/src/main.js"
+grep -q 'id="photo-viewer"' "$ROOT/index.html"
+grep -q 'team-emblem.png' "$ROOT/index.html"
+grep -q 'galleryFootnote' "$ROOT/src/data.js"
 printf '%s\n' "static smoke contract: pass"
