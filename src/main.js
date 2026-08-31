@@ -658,29 +658,48 @@ musicToggle.addEventListener("click", event => {
   musicToggle.title = label;
 });
 
-// --- 浏览人次：右下角小眼睛按钮，点击显示站点累计页面打开次数 ---
+// --- 浏览人次：页面加载递增一次；小眼睛仅近实时读取，不重复计数。 ---
+const COUNT_API_BASE = "https://countapi.mileshilliard.com/api/v1";
+const COUNT_API_KEY = "qiusuo-red-spirit-exhibition-pageviews-5b9c8e31";
+const COUNT_API_HIT_URL = `${COUNT_API_BASE}/hit/${COUNT_API_KEY}`;
+const COUNT_API_GET_URL = `${COUNT_API_BASE}/get/${COUNT_API_KEY}`;
 let viewCountTimer = null;
 let viewCountRequest = null;
 
+async function requestViewCount(action) {
+  const endpoint = action === "hit" ? COUNT_API_HIT_URL : COUNT_API_GET_URL;
+  const response = await fetch(`${endpoint}?_=${Date.now()}`, {
+    mode: "cors",
+    cache: "no-store"
+  });
+  if (!response.ok) throw new Error(String(response.status));
+  const data = await response.json();
+  const count = Number(data.value);
+  if (!Number.isFinite(count)) throw new Error("Invalid counter response");
+  viewCountValue.textContent = String(count);
+  return count;
+}
+
+async function registerPageView() {
+  try {
+    await requestViewCount("hit");
+  } catch (error) {
+    // 统计服务暂时不可用时不影响展厅主体加载。
+  }
+}
+
+const pageViewRegistration = window.location.protocol === "http:" || window.location.protocol === "https:"
+  ? registerPageView()
+  : Promise.resolve();
+
 async function loadViewCount() {
   if (viewCountRequest) return viewCountRequest;
-  const code = window.GOAT_COUNTER_CODE || "";
-  if (!code) {
-    viewCountValue.textContent = "—";
-    return Promise.resolve();
-  }
   viewCountRequest = (async () => {
     try {
-      const counterPath = encodeURIComponent(window.location.pathname);
-      const response = await fetch(`https://${code}.goatcounter.com/counter/${counterPath}.json?_=${Date.now()}`, {
-        mode: "cors",
-        cache: "no-store"
-      });
-      if (!response.ok) throw new Error(String(response.status));
-      const data = await response.json();
-      viewCountValue.textContent = String(data.count || "0");
+      await pageViewRegistration;
+      await requestViewCount("get");
     } catch (error) {
-      viewCountValue.textContent = "—";
+      if (viewCountValue.textContent === "…") viewCountValue.textContent = "—";
     } finally {
       viewCountRequest = null;
     }

@@ -238,13 +238,20 @@ grep -q 'gc.zgo.at/count.js' "$ROOT/index.html"
 grep -q 'id="view-count-toggle"' "$ROOT/index.html"
 grep -q 'id="view-count-popup"' "$ROOT/index.html"
 grep -q 'GOAT_COUNTER_CODE = "fish"' "$ROOT/index.html"
-grep -q 'counterPath = encodeURIComponent(window.location.pathname)' "$ROOT/src/main.js"
-grep -q 'counter/\${counterPath}.json' "$ROOT/src/main.js"
 grep -q 'window.location.pathname' "$ROOT/index.html"
 grep -q 'data-goatcounter="https://fish.goatcounter.com/count"' "$ROOT/index.html"
 grep -q 'no_onload: true' "$ROOT/index.html"
 grep -q 'goatcounter.count({ no_session: true })' "$ROOT/index.html"
 grep -q 'cache: "no-store"' "$ROOT/src/main.js"
+grep -q 'COUNT_API_BASE = "https://countapi.mileshilliard.com/api/v1"' "$ROOT/src/main.js"
+grep -q 'COUNT_API_KEY = "qiusuo-red-spirit-exhibition-pageviews-5b9c8e31"' "$ROOT/src/main.js"
+grep -q '\${COUNT_API_BASE}/hit/\${COUNT_API_KEY}' "$ROOT/src/main.js"
+grep -q '\${COUNT_API_BASE}/get/\${COUNT_API_KEY}' "$ROOT/src/main.js"
+grep -q 'await pageViewRegistration' "$ROOT/src/main.js"
+if grep -q 'goatcounter.com/counter/.*\.json' "$ROOT/src/main.js"; then
+  echo "cached GoatCounter JSON endpoint must not be used for the visible counter" >&2
+  exit 1
+fi
 grep -q 'setInterval(loadViewCount, 15000)' "$ROOT/src/main.js"
 grep -q 'visibilitychange' "$ROOT/src/main.js"
 # --- 更名、门头小字与内涵排版契约 ---
