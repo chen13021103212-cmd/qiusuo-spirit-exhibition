@@ -667,7 +667,8 @@ async function loadViewCount() {
     return;
   }
   try {
-    const response = await fetch(`https://${code}.goatcounter.com/counter/TOTAL.json`, { mode: "cors" });
+    const counterPath = encodeURIComponent(window.location.pathname);
+    const response = await fetch(`https://${code}.goatcounter.com/counter/${counterPath}.json`, { mode: "cors" });
     if (!response.ok) throw new Error(String(response.status));
     const data = await response.json();
     viewCountValue.textContent = String(data.count || "0");

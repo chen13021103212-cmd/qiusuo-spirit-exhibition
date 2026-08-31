@@ -14,20 +14,13 @@
       }
     </script>
     <script>
-      // GoatCounter 站点代码（fish.goatcounter.com/count）
+      // 统一按页面路径统计，忽略刷新链接中的版本参数。
       window.GOAT_COUNTER_CODE = "fish";
+      window.goatcounter = {
+        path: function () { return window.location.pathname; }
+      };
     </script>
-    <script>
-      (function () {
-        const code = window.GOAT_COUNTER_CODE;
-        if (!code) return;
-        const loader = document.createElement("script");
-        loader.setAttribute("data-goatcounter", "https://" + code + ".goatcounter.com/count");
-        loader.async = true;
-        loader.src = "https://gc.zgo.at/count.js";
-        document.head.appendChild(loader);
-      })();
-    </script>
+    <script data-goatcounter="https://fish.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
   </head>
   <body>
     <main id="experience" aria-label="红脉薪火 · 红色精神数字展馆">
@@ -145,6 +138,6 @@
 
       <noscript>此展厅需要启用 JavaScript 才能运行。</noscript>
     </main>
-    <script type="module" src="./src/main.js?v=20260831-portal-fix3"></script>
+    <script type="module" src="./src/main.js?v=20260831-goatcounter-fix"></script>
   </body>
 </html>
