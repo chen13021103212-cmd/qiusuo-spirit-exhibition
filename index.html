@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <meta name="theme-color" content="#5b241d" />
     <title>精神谱系线上展厅 · 中央大厅</title>
-    <link rel="stylesheet" href="./styles.css?v=20260831-mobile-pass" />
+    <link rel="stylesheet" href="./styles.css?v=20260831-counter-pass" />
     <script type="importmap">
       {
         "imports": {
@@ -14,8 +14,8 @@
       }
     </script>
     <script>
-      // GoatCounter 统计：注册 goatcounter.com 后将站点代码填入下方引号（例如 "qiusuo"），留空则统计与浏览人次不启用。
-      window.GOAT_COUNTER_CODE = "";
+      // GoatCounter 站点代码（fish.goatcounter.com/count）
+      window.GOAT_COUNTER_CODE = "fish";
     </script>
     <script>
       (function () {
@@ -26,19 +26,6 @@
         loader.async = true;
         loader.src = "https://gc.zgo.at/count.js";
         document.head.appendChild(loader);
-        const timer = setInterval(function () {
-          if (window.goatcounter && window.goatcounter.visit_count) {
-            clearInterval(timer);
-            window.goatcounter.visit_count({
-              append: "#view-count-host",
-              path: "TOTAL",
-              no_branding: true,
-              style: "div{display:flex;align-items:center;gap:6px;border:0;background:transparent;color:rgba(241,228,202,.66);font-size:11px;letter-spacing:1px;}#gcvc-for,#gcvc-by{display:none;}"
-            });
-            const badge = document.querySelector("#view-count");
-            if (badge) badge.hidden = false;
-          }
-        }, 120);
       })();
     </script>
   </head>
@@ -51,7 +38,6 @@
         <div>
           <p>求索红脉薪火实践队</p>
           <h1>精神谱系线上展厅</h1>
-          <p class="view-count" id="view-count" hidden>浏览 <span id="view-count-host"></span> 人次</p>
         </div>
       </header>
 
@@ -76,7 +62,12 @@
         <button id="help-toggle" class="icon-button" type="button" aria-label="查看操作说明" title="查看操作说明">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.8 9a2.35 2.35 0 1 1 3.6 2c-1 .65-1.4 1.1-1.4 2M12 17h.01"/></svg>
         </button>
+        <button id="view-count-toggle" class="icon-button" type="button" aria-label="查看浏览人次" title="查看浏览人次">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6.5 10-6.5S22 12 22 12s-3.5 6.5-10 6.5S2 12 2 12Z"/><circle cx="12" cy="12" r="2.6"/></svg>
+        </button>
       </div>
+
+      <div class="view-count-popup" id="view-count-popup" role="status" hidden><span>浏览</span><b id="view-count-value">…</b><span>人次</span></div>
 
       <!-- 背景音乐：Sad Trio · Kevin MacLeod (incompetech.com) · CC BY 4.0 -->
       <audio id="ambient-audio" src="./assets/audio/hall-ambience.m4a" loop preload="auto" hidden></audio>
@@ -154,6 +145,6 @@
 
       <noscript>此展厅需要启用 JavaScript 才能运行。</noscript>
     </main>
-    <script type="module" src="./src/main.js?v=20260831-mobile-pass"></script>
+    <script type="module" src="./src/main.js?v=20260831-counter-pass"></script>
   </body>
 </html>

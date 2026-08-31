@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { HALLS, TEAM_ARCHIVE, LIANGLU_EXHIBITION, LIANGDAN_EXHIBITION, SAIHANBA_EXHIBITION, TIBET_EXHIBITION } from "./data.js?v=20260831-mobile-pass";
-import { buildLobby, updateLobby, buildXianExhibition, updateXianExhibition, buildCompactHall, updateCompactHall } from "./scene.js?v=20260831-mobile-pass";
+import { HALLS, TEAM_ARCHIVE, LIANGLU_EXHIBITION, LIANGDAN_EXHIBITION, SAIHANBA_EXHIBITION, TIBET_EXHIBITION } from "./data.js?v=20260831-counter-pass";
+import { buildLobby, updateLobby, buildXianExhibition, updateXianExhibition, buildCompactHall, updateCompactHall } from "./scene.js?v=20260831-counter-pass";
 
 const container = document.querySelector("#scene");
 const loading = document.querySelector("#loading");
@@ -24,6 +24,9 @@ const photoViewer = document.querySelector("#photo-viewer");
 const photoViewerImage = document.querySelector("#photo-viewer-image");
 const photoViewerCaption = document.querySelector("#photo-viewer-caption");
 const photoViewerClose = document.querySelector("#photo-viewer-close");
+const viewCountToggle = document.querySelector("#view-count-toggle");
+const viewCountPopup = document.querySelector("#view-count-popup");
+const viewCountValue = document.querySelector("#view-count-value");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // --- 触屏适配：左屏虚拟摇杆行走，右屏拖动环视、点按查看 ---
@@ -255,6 +258,7 @@ function openInfo(data, kind = "hall") {
 function closePanels() {
   infoPanel.hidden = true;
   helpPanel.hidden = true;
+  if (viewCountPopup && !viewCountPopup.hidden) viewCountPopup.hidden = true;
   closePhotoViewer();
   closeExhibitPanel();
 }
@@ -652,4 +656,37 @@ musicToggle.addEventListener("click", event => {
   const label = muted ? "开启背景音乐" : "关闭背景音乐";
   musicToggle.setAttribute("aria-label", label);
   musicToggle.title = label;
+});
+
+// --- 浏览人次：右下角小眼睛按钮，点击显示站点累计浏览量 ---
+let viewCountLoaded = false;
+async function loadViewCount() {
+  const code = window.GOAT_COUNTER_CODE || "";
+  if (!code) {
+    viewCountValue.textContent = "—";
+    return;
+  }
+  try {
+    const response = await fetch(`https://${code}.goatcounter.com/counter/TOTAL.json`, { mode: "cors" });
+    if (!response.ok) throw new Error(String(response.status));
+    const data = await response.json();
+    viewCountValue.textContent = String(data.count || "0");
+    viewCountLoaded = true;
+  } catch (error) {
+    viewCountLoaded = false;
+    viewCountValue.textContent = "—";
+  }
+}
+viewCountToggle.addEventListener("click", async () => {
+  const willShow = viewCountPopup.hidden;
+  viewCountPopup.hidden = !willShow;
+  if (willShow && !viewCountLoaded) {
+    viewCountValue.textContent = "…";
+    loadViewCount();
+  }
+});
+document.addEventListener("pointerdown", event => {
+  if (!viewCountPopup.hidden && !viewCountPopup.contains(event.target) && event.target !== viewCountToggle) {
+    viewCountPopup.hidden = true;
+  }
 });

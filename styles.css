@@ -370,9 +370,24 @@ noscript { position: absolute; z-index: 30; inset: 0; display: grid; place-items
 }
 #scene canvas { touch-action: none; -webkit-tap-highlight-color: transparent; }
 
-.view-count { margin: 6px 0 0; color: rgba(241, 228, 202, .62); font-size: 11px; letter-spacing: 1px; }
-.view-count[hidden] { display: none; }
-.view-count div { display: inline-flex; align-items: center; gap: 6px; }
+.view-count-popup {
+  position: absolute;
+  right: 36px;
+  bottom: 78px;
+  z-index: 6;
+  padding: 9px 14px;
+  border: 1px solid rgba(235, 199, 122, .5);
+  border-radius: 8px;
+  color: #f7e8c9;
+  background: linear-gradient(145deg, rgba(93, 43, 32, .96), rgba(47, 24, 21, .96));
+  box-shadow: 0 14px 30px rgba(0, 0, 0, .35);
+  font-family: "Kaiti SC", "STKaiti", "KaiTi", "BiauKai", serif;
+  font-size: 14px;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+.view-count-popup[hidden] { display: none; }
+.view-count-popup b { margin: 0 6px; color: #f2cb76; font-size: 16px; font-weight: 600; }
 
 .mobile-joystick {
   position: absolute;
@@ -410,7 +425,6 @@ noscript { position: absolute; z-index: 30; inset: 0; display: grid; place-items
   .brand-mark span { width: 10px; height: 10px; }
   .masthead p:not(.view-count) { display: none; }
   .masthead h1 { margin-top: 3px; font-size: 16px; letter-spacing: 1.5px; }
-  .view-count { font-size: 10px; }
   .music-toggle { top: 10px; right: 10px; width: 36px; height: 36px; }
   .hall-index { top: 54px; right: 10px; width: 148px; padding: 10px 12px; }
   .hall-index__eyebrow { font-size: 9px; letter-spacing: 2px; }
@@ -419,6 +433,7 @@ noscript { position: absolute; z-index: 30; inset: 0; display: grid; place-items
   .controls { right: 10px; bottom: 10px; gap: 6px; }
   .icon-button { width: 34px; height: 34px; }
   .view-status { bottom: 12px; max-width: 72vw; font-size: 9px; letter-spacing: 1px; text-align: center; }
+  .view-count-popup { right: 10px; bottom: 54px; font-size: 13px; }
   .crosshair { width: 14px; height: 14px; }
   .side-panel { right: 10px; left: 10px; bottom: 10px; width: auto; max-height: 70vh; overflow: auto; padding: 22px 20px; }
   .side-panel h2 { font-size: 20px; }
