@@ -132,7 +132,7 @@ grep -q 'function createXianPortalDetail' "$ROOT/src/scene.js"
 grep -q 'hall.id === "xian"' "$ROOT/src/scene.js"
 grep -q 'focusTarget' "$ROOT/src/main.js"
 grep -q 'centerpiece' "$ROOT/src/main.js"
-grep -q '20260831-name-pass' "$ROOT/index.html"
+grep -q '20260831-red-pulse' "$ROOT/index.html"
 # --- 本轮门头、团队档案、标志物与弹窗回归契约 ---
 if grep -q 'assets/team/team-photo.jpg' "$ROOT/src/scene.js"; then
   printf '%s\n' "static smoke contract: meeting screenshot must be removed from team wall" >&2
@@ -168,7 +168,7 @@ if sed -n '/function faceReadablePlane/,/^}/p' "$ROOT/src/scene.js" | grep -Eq '
 fi
 grep -q 'const portalRevealDepth = 7.12' "$ROOT/src/scene.js"
 grep -q 'const portalArtworkDepth = 7.28' "$ROOT/src/scene.js"
-grep -q '20260831-name-pass' "$ROOT/index.html"
+grep -q '20260831-red-pulse' "$ROOT/index.html"
 grep -Eq '\.exhibit-panel > \.panel-close.*width: 46px.*height: 46px' "$ROOT/styles.css"
 grep -Eq '\.exhibit-panel__actions \.text-button.*min-height: 46px' "$ROOT/styles.css"
 grep -q 'function bindExhibitPanelActions' "$ROOT/src/main.js"
@@ -239,4 +239,10 @@ grep -q 'id="view-count-toggle"' "$ROOT/index.html"
 grep -q 'id="view-count-popup"' "$ROOT/index.html"
 grep -q 'GOAT_COUNTER_CODE = "fish"' "$ROOT/index.html"
 grep -q 'counter/TOTAL.json' "$ROOT/src/main.js"
+# --- 更名、门头小字与内涵排版契约 ---
+grep -q '红脉薪火 · 红色精神数字展馆' "$ROOT/index.html"
+grep -q 'labelTexture(hall, { subtitle: false })' "$ROOT/src/scene.js"
+grep -q 'function wrapSubtitleLines' "$ROOT/src/scene.js"
+grep -q 'wrapSubtitle: true' "$ROOT/src/scene.js"
+grep -q 'anisotropy = 16' "$ROOT/src/scene.js"
 printf '%s\n' "static smoke contract: pass"

@@ -421,25 +421,28 @@ noscript { position: absolute; z-index: 30; inset: 0; display: grid; place-items
 @media (max-width: 919px) {
   #experience { min-width: 0; }
   .masthead { top: 12px; left: 12px; gap: 9px; }
-  .brand-mark { width: 26px; height: 26px; }
-  .brand-mark span { width: 10px; height: 10px; }
+  .brand-mark { width: 30px; height: 30px; }
+  .brand-mark span { width: 11px; height: 11px; }
   .masthead p:not(.view-count) { display: none; }
-  .masthead h1 { margin-top: 3px; font-size: 16px; letter-spacing: 1.5px; }
+  .masthead h1 { margin-top: 3px; font-size: 18px; letter-spacing: 1.5px; }
   .music-toggle { top: 10px; right: 10px; width: 36px; height: 36px; }
   .hall-index { top: 54px; right: 10px; width: 148px; padding: 10px 12px; }
-  .hall-index__eyebrow { font-size: 9px; letter-spacing: 2px; }
-  .hall-index li { font-size: 11px; min-height: 22px; }
-  .back-button { top: auto; right: auto; left: 12px; bottom: 84px; min-height: 38px; padding: 0 12px; font-size: 12px; letter-spacing: 1px; }
+  .hall-index__eyebrow { font-size: 10px; letter-spacing: 2px; }
+  .hall-index li { font-size: 12px; min-height: 24px; }
+  .back-button { top: auto; right: auto; left: 12px; bottom: 84px; min-height: 40px; padding: 0 12px; font-size: 13px; letter-spacing: 1px; }
   .controls { right: 10px; bottom: 10px; gap: 6px; }
   .icon-button { width: 34px; height: 34px; }
-  .view-status { bottom: 12px; max-width: 72vw; font-size: 9px; letter-spacing: 1px; text-align: center; }
+  .view-status { bottom: 12px; max-width: 72vw; font-size: 10.5px; letter-spacing: 1px; text-align: center; }
   .view-count-popup { right: 10px; bottom: 54px; font-size: 13px; }
   .crosshair { width: 14px; height: 14px; }
   .side-panel { right: 10px; left: 10px; bottom: 10px; width: auto; max-height: 70vh; overflow: auto; padding: 22px 20px; }
   .side-panel h2 { font-size: 20px; }
   .info-panel { width: calc(100vw - 20px); max-height: calc(100dvh - 20px); padding: 34px 22px 26px; overflow: auto; }
   .info-panel h2 { font-size: 25px; }
-  .help-grid div { grid-template-columns: 92px 1fr; }
+  .info-panel p { font-size: 15px; line-height: 1.95; }
+  .info-tags span { font-size: 12px; }
+  .panel-kicker { font-size: 11px; }
+  .help-grid div { grid-template-columns: 96px 1fr; font-size: 13px; }
   .help-desktop { display: none; }
   .help-mobile { display: grid; }
   .panel-close { width: 36px; height: 36px; }
@@ -448,6 +451,8 @@ noscript { position: absolute; z-index: 30; inset: 0; display: grid; place-items
   .exhibit-panel__media { max-height: 42dvh; min-height: 0; }
   .exhibit-panel__body { padding: 26px 22px 30px; }
   .exhibit-panel__body h2 { font-size: 25px; }
+  .exhibit-panel__body > p { font-size: 15px; }
+  .exhibit-panel__body li { font-size: 13.5px; }
   .exhibit-panel > .panel-close { width: 40px; height: 40px; right: 12px; top: 12px; }
   .photo-viewer { padding: 12px; }
   .photo-viewer > .panel-close { right: 12px; top: 12px; }

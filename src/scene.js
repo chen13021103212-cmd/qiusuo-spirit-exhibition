@@ -12,7 +12,7 @@ function canvasTexture(draw, width = 1024, height = 512) {
   draw(context, width, height);
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
-  texture.anisotropy = 8;
+  texture.anisotropy = 16;
   return texture;
 }
 
@@ -52,6 +52,34 @@ function wrapCanvasText(ctx, text, maxWidth, maxLines = 3) {
   return lines;
 }
 
+function wrapSubtitleLines(ctx, text, maxWidth, maxLines = 2) {
+  // 优先在 “ · ”、顿号处均衡断行，仍放不下则按字回退。
+  for (const separator of [" · ", "、"]) {
+    const parts = text.split(separator);
+    if (parts.length < 2) continue;
+    const widths = parts.map(part => ctx.measureText(part).width);
+    const separatorWidth = ctx.measureText(separator).width;
+    const total = widths.reduce((sum, w) => sum + w, 0) + separatorWidth * (parts.length - 1);
+    let best = 1;
+    let bestDiff = Infinity;
+    for (let split = 1; split < parts.length; split += 1) {
+      const left = widths.slice(0, split).reduce((sum, w) => sum + w, 0) + separatorWidth * (split - 1);
+      const right = total - left - separatorWidth;
+      const diff = Math.abs(left - right);
+      if (diff < bestDiff) {
+        bestDiff = diff;
+        best = split;
+      }
+    }
+    const line1 = parts.slice(0, best).join(separator);
+    const line2 = parts.slice(best).join(separator);
+    if (ctx.measureText(line1).width <= maxWidth && ctx.measureText(line2).width <= maxWidth) {
+      return [line1, line2];
+    }
+  }
+  return wrapCanvasText(ctx, text, maxWidth, maxLines);
+}
+
 function surfaceTexture(base, veins, speckles, repeat = [3, 3]) {
   const texture = canvasTexture((ctx, width, height) => {
     const wash = ctx.createLinearGradient(0, 0, width, height);
@@ -84,7 +112,7 @@ function surfaceTexture(base, veins, speckles, repeat = [3, 3]) {
   return texture;
 }
 
-function labelTexture(hall) {
+function labelTexture(hall, { subtitle = true } = {}) {
   return canvasTexture((ctx, width, height) => {
     ctx.fillStyle = "#2b1b16";
     ctx.fillRect(0, 0, width, height);
@@ -100,10 +128,12 @@ function labelTexture(hall) {
     ctx.fillText(`${hall.index} 号展厅`, width / 2, 98);
     ctx.fillStyle = "#f4e4c1";
     ctx.font = "600 82px Songti SC, STSong, serif";
-    ctx.fillText(hall.name, width / 2, 210);
-    ctx.fillStyle = "rgba(239,224,194,.72)";
-    ctx.font = "600 30px Kaiti SC, STKaiti, KaiTi, BiauKai, serif";
-    ctx.fillText(hall.subtitle, width / 2, 280);
+    ctx.fillText(hall.name, width / 2, subtitle ? 210 : 206);
+    if (subtitle) {
+      ctx.fillStyle = "rgba(239,224,194,.72)";
+      ctx.font = "600 30px Kaiti SC, STKaiti, KaiTi, BiauKai, serif";
+      ctx.fillText(hall.subtitle, width / 2, 280);
+    }
     ctx.strokeStyle = "rgba(183,139,70,.6)";
     ctx.lineWidth = 2;
     ctx.strokeRect(38, 38, width - 76, height - 76);
@@ -459,7 +489,7 @@ function createArch(materials, hall) {
   farWall.rotation.y = Math.PI;
   group.add(farWall);
   group.add(createPortalThemePanel(hall, materials));
-  const label = new THREE.Mesh(new THREE.PlaneGeometry(3.18, .99), createReadableTexture(labelTexture(hall)));
+  const label = new THREE.Mesh(new THREE.PlaneGeometry(3.18, .99), createReadableTexture(labelTexture(hall, { subtitle: false })));
   label.position.set(0, 6.92, -.78);
   faceReadablePlane(label);
   group.add(label);
@@ -625,7 +655,7 @@ function createTeamArchive(loader, materials) {
   const logoMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, alphaTest: .08, depthWrite: false, toneMapped: false, side: THREE.FrontSide });
   loader.load("./assets/team/team-emblem.png", texture => {
     texture.colorSpace = THREE.SRGBColorSpace;
-    texture.anisotropy = 8;
+    texture.anisotropy = 16;
     logoMaterial.map = texture;
     logoMaterial.needsUpdate = true;
   });
@@ -707,7 +737,8 @@ function createRouteRelief(materials) {
   return group;
 }
 
-function exhibitTextTexture(title, subtitle, accent = "#b98542", width = 1344, height = 400) {
+function exhibitTextTexture(title, subtitle, accent = "#b98542", width = 1344, height = 400, options = {}) {
+  const { wrapSubtitle = false } = options;
   return canvasTexture((ctx, width, height) => {
     const background = ctx.createLinearGradient(0, 0, width, height);
     background.addColorStop(0, "#3a211b");
@@ -728,10 +759,18 @@ function exhibitTextTexture(title, subtitle, accent = "#b98542", width = 1344, h
     ctx.fillStyle = "#f7e8c9";
     const titleSize = Math.min(76, height * .23, (width - width * .14) / Math.max(Array.from(title).length, 8));
     ctx.font = `600 ${titleSize}px Songti SC, STSong, serif`;
-    ctx.fillText(title, width * .068, height * .48);
+    ctx.fillText(title, width * .068, wrapSubtitle ? height * .42 : height * .48);
     ctx.fillStyle = "rgba(255, 239, 202, .94)";
-    ctx.font = `600 ${Math.min(34, height * .115)}px Kaiti SC, STKaiti, KaiTi, BiauKai, serif`;
-    ctx.fillText(subtitle, width * .07, height * .7);
+    if (wrapSubtitle) {
+      const subtitleSize = Math.min(42, height * .13);
+      ctx.font = `600 ${subtitleSize}px Kaiti SC, STKaiti, KaiTi, BiauKai, serif`;
+      const lines = wrapSubtitleLines(ctx, subtitle, width - width * .14, 2);
+      const lineHeight = subtitleSize * 1.3;
+      lines.forEach((line, index) => ctx.fillText(line, width * .07, height * .6 + index * lineHeight));
+    } else {
+      ctx.font = `600 ${Math.min(34, height * .115)}px Kaiti SC, STKaiti, KaiTi, BiauKai, serif`;
+      ctx.fillText(subtitle, width * .07, height * .7);
+    }
   }, width, height);
 }
 
@@ -832,7 +871,7 @@ function createXianPhoto(loader, path, width, height, materials) {
   });
   loader.load(path, texture => {
     texture.colorSpace = THREE.SRGBColorSpace;
-    texture.anisotropy = 8;
+    texture.anisotropy = 16;
     fitTextureCover(texture, texture.image.width, texture.image.height, width, height);
     material.map = texture;
     material.needsUpdate = true;
@@ -1181,7 +1220,7 @@ function createExhibitPhotoFit(loader, path, maxWidth, maxHeight, materials) {
   frame.add(edge);
   loader.load(path, texture => {
     texture.colorSpace = THREE.SRGBColorSpace;
-    texture.anisotropy = 8;
+    texture.anisotropy = 16;
     const imageWidth = texture.image.width || 1;
     const imageHeight = texture.image.height || 1;
     const scale = Math.min(maxWidth / imageWidth, maxHeight / imageHeight);
@@ -1293,7 +1332,7 @@ export function buildXianExhibition(scene) {
 
   const title = new THREE.Mesh(
     new THREE.PlaneGeometry(8.8, 2.6),
-    new THREE.MeshBasicMaterial({ map: exhibitTextTexture(XIAN_EXHIBITION.subtitle, XIAN_EXHIBITION.quote), toneMapped: false, side: THREE.DoubleSide })
+    new THREE.MeshBasicMaterial({ map: exhibitTextTexture(XIAN_EXHIBITION.subtitle, XIAN_EXHIBITION.quote, "#b98542", 1344, 400, { wrapSubtitle: true }), toneMapped: false, side: THREE.DoubleSide })
   );
   title.position.set(0, 4.42, 8.72);
   faceReadablePlane(title);
@@ -1411,7 +1450,7 @@ function createCompactTitleWall(exhibition, materials) {
   const group = new THREE.Group();
   const title = new THREE.Mesh(
     new THREE.PlaneGeometry(8.4, 2.5),
-    new THREE.MeshBasicMaterial({ map: exhibitTextTexture(exhibition.subtitle, exhibition.quote), toneMapped: false, side: THREE.DoubleSide })
+    new THREE.MeshBasicMaterial({ map: exhibitTextTexture(exhibition.subtitle, exhibition.quote, "#b98542", 1344, 400, { wrapSubtitle: true }), toneMapped: false, side: THREE.DoubleSide })
   );
   title.position.set(0, 4.0, 0);
   faceReadablePlane(title);
