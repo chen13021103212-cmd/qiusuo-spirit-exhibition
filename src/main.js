@@ -658,8 +658,7 @@ musicToggle.addEventListener("click", event => {
   musicToggle.title = label;
 });
 
-// --- 浏览人次：右下角小眼睛按钮，点击显示站点累计浏览量 ---
-let viewCountLoaded = false;
+// --- 浏览人次：右下角小眼睛按钮，点击显示站点累计页面打开次数 ---
 async function loadViewCount() {
   const code = window.GOAT_COUNTER_CODE || "";
   if (!code) {
@@ -668,20 +667,21 @@ async function loadViewCount() {
   }
   try {
     const counterPath = encodeURIComponent(window.location.pathname);
-    const response = await fetch(`https://${code}.goatcounter.com/counter/${counterPath}.json`, { mode: "cors" });
+    const response = await fetch(`https://${code}.goatcounter.com/counter/${counterPath}.json?_=${Date.now()}`, {
+      mode: "cors",
+      cache: "no-store"
+    });
     if (!response.ok) throw new Error(String(response.status));
     const data = await response.json();
     viewCountValue.textContent = String(data.count || "0");
-    viewCountLoaded = true;
   } catch (error) {
-    viewCountLoaded = false;
     viewCountValue.textContent = "—";
   }
 }
 viewCountToggle.addEventListener("click", async () => {
   const willShow = viewCountPopup.hidden;
   viewCountPopup.hidden = !willShow;
-  if (willShow && !viewCountLoaded) {
+  if (willShow) {
     viewCountValue.textContent = "…";
     loadViewCount();
   }
