@@ -2,16 +2,44 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <meta name="theme-color" content="#5b241d" />
     <title>精神谱系线上展厅 · 中央大厅</title>
-    <link rel="stylesheet" href="./styles.css?v=20260831-gallery-pass" />
+    <link rel="stylesheet" href="./styles.css?v=20260831-mobile-pass" />
     <script type="importmap">
       {
         "imports": {
           "three": "https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js"
         }
       }
+    </script>
+    <script>
+      // GoatCounter 统计：注册 goatcounter.com 后将站点代码填入下方引号（例如 "qiusuo"），留空则统计与浏览人次不启用。
+      window.GOAT_COUNTER_CODE = "";
+    </script>
+    <script>
+      (function () {
+        const code = window.GOAT_COUNTER_CODE;
+        if (!code) return;
+        const loader = document.createElement("script");
+        loader.setAttribute("data-goatcounter", "https://" + code + ".goatcounter.com/count");
+        loader.async = true;
+        loader.src = "https://gc.zgo.at/count.js";
+        document.head.appendChild(loader);
+        const timer = setInterval(function () {
+          if (window.goatcounter && window.goatcounter.visit_count) {
+            clearInterval(timer);
+            window.goatcounter.visit_count({
+              append: "#view-count-host",
+              path: "TOTAL",
+              no_branding: true,
+              style: "div{display:flex;align-items:center;gap:6px;border:0;background:transparent;color:rgba(241,228,202,.66);font-size:11px;letter-spacing:1px;}#gcvc-for,#gcvc-by{display:none;}"
+            });
+            const badge = document.querySelector("#view-count");
+            if (badge) badge.hidden = false;
+          }
+        }, 120);
+      })();
     </script>
   </head>
   <body>
@@ -23,6 +51,7 @@
         <div>
           <p>求索红脉薪火实践队</p>
           <h1>精神谱系线上展厅</h1>
+          <p class="view-count" id="view-count" hidden>浏览 <span id="view-count-host"></span> 人次</p>
         </div>
       </header>
 
@@ -56,6 +85,8 @@
         <svg class="music-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/><path d="M4 4l16 16"/></svg>
       </button>
 
+      <div class="mobile-joystick" id="mobile-joystick" hidden aria-hidden="true"><div class="mobile-joystick__thumb" id="mobile-joystick-thumb"></div></div>
+
       <div class="crosshair" aria-hidden="true"><span></span></div>
 
       <section id="loading" class="loading" aria-live="polite">
@@ -69,10 +100,14 @@
         <span class="panel-kicker">参观方式</span>
         <h2 id="help-title">在空间里慢慢走</h2>
         <div class="help-grid">
-          <div><kbd>拖拽</kbd><span>环视建筑与展厅入口</span></div>
-          <div><kbd>WASD / 方向键</kbd><span>在中央大厅中自由行走</span></div>
-          <div><kbd>单击地面</kbd><span>平滑移动至所选位置</span></div>
-          <div><kbd>单击入口</kbd><span>查看对应主题馆状态</span></div>
+          <div class="help-desktop"><kbd>拖拽</kbd><span>环视建筑与展厅入口</span></div>
+          <div class="help-desktop"><kbd>WASD / 方向键</kbd><span>在中央大厅中自由行走</span></div>
+          <div class="help-desktop"><kbd>单击地面</kbd><span>平滑移动至所选位置</span></div>
+          <div class="help-desktop"><kbd>单击入口</kbd><span>查看对应主题馆状态</span></div>
+          <div class="help-mobile"><kbd>左屏拖动</kbd><span>虚拟摇杆自由行走</span></div>
+          <div class="help-mobile"><kbd>右屏拖动</kbd><span>环视展厅空间</span></div>
+          <div class="help-mobile"><kbd>轻点地面</kbd><span>移动到所选位置</span></div>
+          <div class="help-mobile"><kbd>轻点展墙</kbd><span>查看内容档案</span></div>
         </div>
       </section>
 
@@ -119,6 +154,6 @@
 
       <noscript>此展厅需要启用 JavaScript 才能运行。</noscript>
     </main>
-    <script type="module" src="./src/main.js?v=20260831-gallery-pass"></script>
+    <script type="module" src="./src/main.js?v=20260831-mobile-pass"></script>
   </body>
 </html>

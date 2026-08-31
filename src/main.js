@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { HALLS, TEAM_ARCHIVE, LIANGLU_EXHIBITION, LIANGDAN_EXHIBITION, SAIHANBA_EXHIBITION, TIBET_EXHIBITION } from "./data.js?v=20260831-gallery-pass";
-import { buildLobby, updateLobby, buildXianExhibition, updateXianExhibition, buildCompactHall, updateCompactHall } from "./scene.js?v=20260831-gallery-pass";
+import { HALLS, TEAM_ARCHIVE, LIANGLU_EXHIBITION, LIANGDAN_EXHIBITION, SAIHANBA_EXHIBITION, TIBET_EXHIBITION } from "./data.js?v=20260831-mobile-pass";
+import { buildLobby, updateLobby, buildXianExhibition, updateXianExhibition, buildCompactHall, updateCompactHall } from "./scene.js?v=20260831-mobile-pass";
 
 const container = document.querySelector("#scene");
 const loading = document.querySelector("#loading");
@@ -26,6 +26,37 @@ const photoViewerCaption = document.querySelector("#photo-viewer-caption");
 const photoViewerClose = document.querySelector("#photo-viewer-close");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+// --- 触屏适配：左屏虚拟摇杆行走，右屏拖动环视、点按查看 ---
+const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
+if (isTouchDevice) document.body.classList.add("is-touch");
+const joystickBase = document.querySelector("#mobile-joystick");
+const joystickThumb = document.querySelector("#mobile-joystick-thumb");
+const JOYSTICK_RADIUS = 54;
+const JOYSTICK_ZONE = .42;
+let joystickActive = false;
+let joystickOrigin = { x: 0, y: 0 };
+const joystickInput = new THREE.Vector2();
+const movementHint = isTouchDevice
+  ? "左侧拖动行走 · 右侧拖动环视 · 点按查看内容"
+  : "拖拽环视 · WASD / 方向键行走 · 点击地面移动";
+const walkHint = isTouchDevice
+  ? "左侧拖动行走 · 右侧拖动环视 · 点开展墙内容"
+  : "拖拽环视 · WASD / 方向键行走 · 点击展墙查看内容";
+const focusHint = isTouchDevice
+  ? "正在靠近主题说明 · 拖动可随时接管"
+  : "正在靠近主题说明 · 按方向键或 WASD 可随时接管";
+statusText.textContent = movementHint;
+
+function updateJoystick(event) {
+  const dx = event.clientX - joystickOrigin.x;
+  const dy = event.clientY - joystickOrigin.y;
+  const length = Math.hypot(dx, dy) || 1;
+  const clamped = Math.min(length, JOYSTICK_RADIUS);
+  const strength = clamped / JOYSTICK_RADIUS;
+  joystickInput.set(dx / length * strength, -dy / length * strength);
+  joystickThumb.style.transform = `translate(${dx / length * clamped}px, ${dy / length * clamped}px)`;
+}
+
 HALLS.forEach(hall => {
   const item = document.createElement("li");
   item.dataset.hall = hall.id;
@@ -48,7 +79,7 @@ const initialPosition = new THREE.Vector3(0, 1.72, 10.3);
 camera.position.copy(initialPosition);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, isTouchDevice ? 1.5 : 1.75));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -141,7 +172,7 @@ function focusCompactTitleWall() {
   focusWaypoints.push(focusTarget.clone());
   focusLookAt.set(0, 2.82, 6.65);
   hasFocusTarget = true;
-  statusText.textContent = "正在靠近主题说明 · 按方向键或 WASD 可随时接管";
+  statusText.textContent = focusHint;
 }
 
 function clampPosition(position) {
@@ -170,7 +201,7 @@ function clampPosition(position) {
 function setHallStatus(hall) {
   hoveredHall = hall;
   document.querySelectorAll("#hall-list li").forEach(item => item.classList.toggle("is-active", hall && item.dataset.hall === hall.id));
-  statusText.textContent = hall ? `靠近 ${hall.name} · 单击入口查看` : "拖拽环视 · WASD / 方向键行走 · 点击地面移动";
+  statusText.textContent = hall ? `靠近 ${hall.name} · 单击入口查看` : movementHint;
 }
 
 function nearestHall() {
@@ -323,7 +354,7 @@ function enterExhibition(id) {
   backToLobby.hidden = false;
   locationLabel.textContent = id === "xian" ? "西迁精神展厅" : compactHallRegistry[id].label;
   document.querySelector("#exhibit-return").textContent = id === "xian" ? "返回西迁展厅" : `返回${compactHallRegistry[id].label}`;
-  statusText.textContent = "拖拽环视 · WASD / 方向键行走 · 点击展墙查看内容";
+  statusText.textContent = walkHint;
   renderer.toneMappingExposure = 1.42;
   updateCameraRotation();
   closePanels();
@@ -343,7 +374,7 @@ function returnToLobby() {
   hallIndex.hidden = false;
   backToLobby.hidden = true;
   locationLabel.textContent = "中央大厅";
-  statusText.textContent = "拖拽环视 · WASD / 方向键行走 · 点击地面移动";
+  statusText.textContent = movementHint;
   renderer.toneMappingExposure = 1.24;
   updateCameraRotation();
   closePanels();
@@ -351,6 +382,17 @@ function returnToLobby() {
 
 renderer.domElement.addEventListener("pointerdown", event => {
   if (event.button !== 0) return;
+  if (isTouchDevice && event.clientX < window.innerWidth * JOYSTICK_ZONE) {
+    joystickActive = true;
+    joystickOrigin = { x: event.clientX, y: event.clientY };
+    joystickBase.hidden = false;
+    joystickBase.style.left = `${event.clientX - 56}px`;
+    joystickBase.style.top = `${event.clientY - 56}px`;
+    joystickThumb.style.transform = "translate(0px, 0px)";
+    updateJoystick(event);
+    renderer.domElement.setPointerCapture(event.pointerId);
+    return;
+  }
   isDragging = true;
   dragMoved = false;
   previousPointer = { x: event.clientX, y: event.clientY };
@@ -359,6 +401,10 @@ renderer.domElement.addEventListener("pointerdown", event => {
 });
 
 renderer.domElement.addEventListener("pointermove", event => {
+  if (joystickActive) {
+    updateJoystick(event);
+    return;
+  }
   if (!isDragging) return;
   const dx = event.clientX - previousPointer.x;
   const dy = event.clientY - previousPointer.y;
@@ -374,6 +420,13 @@ renderer.domElement.addEventListener("pointermove", event => {
 });
 
 renderer.domElement.addEventListener("pointerup", event => {
+  if (joystickActive) {
+    joystickActive = false;
+    joystickInput.set(0, 0);
+    joystickBase.hidden = true;
+    renderer.domElement.releasePointerCapture?.(event.pointerId);
+    return;
+  }
   isDragging = false;
   renderer.domElement.classList.remove("is-dragging");
   renderer.domElement.releasePointerCapture(event.pointerId);
@@ -403,6 +456,16 @@ renderer.domElement.addEventListener("pointerup", event => {
     hasClickTarget = true;
     cancelFocusMove();
   }
+});
+
+renderer.domElement.addEventListener("pointercancel", event => {
+  if (joystickActive) {
+    joystickActive = false;
+    joystickInput.set(0, 0);
+    joystickBase.hidden = true;
+  }
+  isDragging = false;
+  renderer.domElement.classList.remove("is-dragging");
 });
 
 window.addEventListener("keydown", event => {
@@ -467,6 +530,8 @@ function movementInput() {
   if (keys.has("KeyS") || keys.has("ArrowDown")) input.y -= 1;
   if (keys.has("KeyA") || keys.has("ArrowLeft")) input.x -= 1;
   if (keys.has("KeyD") || keys.has("ArrowRight")) input.x += 1;
+  input.x += joystickInput.x;
+  input.y += joystickInput.y;
   return input.lengthSq() > 0 ? input.normalize() : input;
 }
 
@@ -520,12 +585,17 @@ function animate() {
   renderer.render(scene, camera);
 }
 
-window.addEventListener("resize", () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
+function handleResize() {
+  const width = window.visualViewport ? window.visualViewport.width : window.innerWidth;
+  const height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+  camera.aspect = width / height;
   camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
-});
+  renderer.setSize(width, height);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, isTouchDevice ? 1.5 : 1.75));
+}
+window.addEventListener("resize", handleResize);
+window.addEventListener("orientationchange", handleResize);
+window.visualViewport?.addEventListener("resize", handleResize);
 
 requestAnimationFrame(() => {
   animate();
