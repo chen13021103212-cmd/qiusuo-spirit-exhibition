@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { HALLS, TEAM_ARCHIVE, LIANGLU_EXHIBITION, LIANGDAN_EXHIBITION, SAIHANBA_EXHIBITION, TIBET_EXHIBITION } from "./data.js?v=20260831-clarity";
-import { buildLobby, updateLobby, buildXianExhibition, updateXianExhibition, buildCompactHall, updateCompactHall } from "./scene.js?v=20260831-clarity";
+import { HALLS, TEAM_ARCHIVE, LIANGLU_EXHIBITION, LIANGDAN_EXHIBITION, SAIHANBA_EXHIBITION, TIBET_EXHIBITION } from "./data.js?v=20260831-portal-fix";
+import { buildLobby, updateLobby, buildXianExhibition, updateXianExhibition, buildCompactHall, updateCompactHall } from "./scene.js?v=20260831-portal-fix";
 
 const container = document.querySelector("#scene");
 const loading = document.querySelector("#loading");

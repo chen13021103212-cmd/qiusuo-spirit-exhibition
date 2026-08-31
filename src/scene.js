@@ -112,7 +112,7 @@ function surfaceTexture(base, veins, speckles, repeat = [3, 3]) {
   return texture;
 }
 
-function labelTexture(hall) {
+function labelTexture(hall, fontSize = 150) {
   return canvasTexture((ctx, width, height) => {
     ctx.fillStyle = "#2b1b16";
     ctx.fillRect(0, 0, width, height);
@@ -121,8 +121,9 @@ function labelTexture(hall) {
     ctx.strokeRect(24, 24, width - 48, height - 48);
     ctx.textAlign = "center";
     ctx.fillStyle = "#f4e4c1";
-    ctx.font = "600 150px Songti SC, STSong, serif";
-    ctx.fillText(hall.name, width / 2, 312);
+    ctx.font = `600 ${fontSize}px Songti SC, STSong, serif`;
+    const baseline = (height + fontSize * .72) / 2;
+    ctx.fillText(hall.name, width / 2, baseline);
   }, 1600, 500);
 }
 
@@ -475,12 +476,12 @@ function createArch(materials, hall) {
   farWall.rotation.y = Math.PI;
   group.add(farWall);
   group.add(createPortalThemePanel(hall, materials));
-  const label = new THREE.Mesh(new THREE.PlaneGeometry(3.18, .99), createReadableTexture(labelTexture(hall)));
-  label.position.set(0, 6.92, -.78);
+  const label = new THREE.Mesh(new THREE.PlaneGeometry(3.02, .94), createReadableTexture(labelTexture(hall)));
+  label.position.set(0, 6.05, -.78);
   faceReadablePlane(label);
   group.add(label);
-  const plaqueBack = new THREE.Mesh(new THREE.BoxGeometry(3.56, 1.14, .12), materials.wood);
-  plaqueBack.position.set(0, 6.92, -.68);
+  const plaqueBack = new THREE.Mesh(new THREE.BoxGeometry(3.34, 1.04, .12), materials.wood);
+  plaqueBack.position.set(0, 6.05, -.68);
   group.add(plaqueBack);
   const point = new THREE.PointLight(hall.glow, 6.2, 9.5, 1.8);
   point.position.set(0, 3.4, 2.5);
@@ -511,7 +512,7 @@ function createPortalThemePanel(hall, materials) {
   group.add(reveal);
   const themeFrame = new THREE.Mesh(
     new THREE.PlaneGeometry(3.04, .95),
-    createReadableTexture(labelTexture(hall))
+    createReadableTexture(labelTexture(hall, 190))
   );
   themeFrame.position.set(0, 3.24, 6.145);
   faceReadablePlane(themeFrame);
