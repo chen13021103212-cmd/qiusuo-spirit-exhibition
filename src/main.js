@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { HALLS, TEAM_ARCHIVE, LIANGLU_EXHIBITION, LIANGDAN_EXHIBITION, SAIHANBA_EXHIBITION, TIBET_EXHIBITION } from "./data.js?v=20260831-red-pulse";
-import { buildLobby, updateLobby, buildXianExhibition, updateXianExhibition, buildCompactHall, updateCompactHall } from "./scene.js?v=20260831-red-pulse";
+import { HALLS, TEAM_ARCHIVE, LIANGLU_EXHIBITION, LIANGDAN_EXHIBITION, SAIHANBA_EXHIBITION, TIBET_EXHIBITION } from "./data.js?v=20260831-clarity";
+import { buildLobby, updateLobby, buildXianExhibition, updateXianExhibition, buildCompactHall, updateCompactHall } from "./scene.js?v=20260831-clarity";
 
 const container = document.querySelector("#scene");
 const loading = document.querySelector("#loading");
@@ -82,7 +82,7 @@ const initialPosition = new THREE.Vector3(0, 1.72, 10.3);
 camera.position.copy(initialPosition);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, isTouchDevice ? 1.6 : 1.75));
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -595,7 +595,7 @@ function handleResize() {
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
   renderer.setSize(width, height);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, isTouchDevice ? 1.6 : 1.75));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
 }
 window.addEventListener("resize", handleResize);
 window.addEventListener("orientationchange", handleResize);

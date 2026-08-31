@@ -112,32 +112,18 @@ function surfaceTexture(base, veins, speckles, repeat = [3, 3]) {
   return texture;
 }
 
-function labelTexture(hall, { subtitle = true } = {}) {
+function labelTexture(hall) {
   return canvasTexture((ctx, width, height) => {
     ctx.fillStyle = "#2b1b16";
     ctx.fillRect(0, 0, width, height);
-    const gradient = ctx.createLinearGradient(0, 0, width, 0);
-    gradient.addColorStop(0, "rgba(183,139,70,0)");
-    gradient.addColorStop(.5, hall.glow);
-    gradient.addColorStop(1, "rgba(183,139,70,0)");
-    ctx.fillStyle = gradient;
-    ctx.fillRect(90, 30, width - 180, 3);
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#dec892";
-    ctx.font = "500 38px Songti SC, STSong, serif";
-    ctx.fillText(`${hall.index} 号展厅`, width / 2, 98);
-    ctx.fillStyle = "#f4e4c1";
-    ctx.font = "600 82px Songti SC, STSong, serif";
-    ctx.fillText(hall.name, width / 2, subtitle ? 210 : 206);
-    if (subtitle) {
-      ctx.fillStyle = "rgba(239,224,194,.72)";
-      ctx.font = "600 30px Kaiti SC, STKaiti, KaiTi, BiauKai, serif";
-      ctx.fillText(hall.subtitle, width / 2, 280);
-    }
     ctx.strokeStyle = "rgba(183,139,70,.6)";
-    ctx.lineWidth = 2;
-    ctx.strokeRect(38, 38, width - 76, height - 76);
-  }, 1024, 320);
+    ctx.lineWidth = 3;
+    ctx.strokeRect(24, 24, width - 48, height - 48);
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#f4e4c1";
+    ctx.font = "600 150px Songti SC, STSong, serif";
+    ctx.fillText(hall.name, width / 2, 312);
+  }, 1600, 500);
 }
 
 function archiveTexture(variant = 0) {
@@ -489,7 +475,7 @@ function createArch(materials, hall) {
   farWall.rotation.y = Math.PI;
   group.add(farWall);
   group.add(createPortalThemePanel(hall, materials));
-  const label = new THREE.Mesh(new THREE.PlaneGeometry(3.18, .99), createReadableTexture(labelTexture(hall, { subtitle: false })));
+  const label = new THREE.Mesh(new THREE.PlaneGeometry(3.18, .99), createReadableTexture(labelTexture(hall)));
   label.position.set(0, 6.92, -.78);
   faceReadablePlane(label);
   group.add(label);
@@ -762,7 +748,7 @@ function exhibitTextTexture(title, subtitle, accent = "#b98542", width = 1344, h
     ctx.fillText(title, width * .068, wrapSubtitle ? height * .42 : height * .48);
     ctx.fillStyle = "rgba(255, 239, 202, .94)";
     if (wrapSubtitle) {
-      const subtitleSize = Math.min(42, height * .13);
+      const subtitleSize = Math.min(50, height * .16);
       ctx.font = `600 ${subtitleSize}px Kaiti SC, STKaiti, KaiTi, BiauKai, serif`;
       const lines = wrapSubtitleLines(ctx, subtitle, width - width * .14, 2);
       const lineHeight = subtitleSize * 1.3;
@@ -1332,7 +1318,7 @@ export function buildXianExhibition(scene) {
 
   const title = new THREE.Mesh(
     new THREE.PlaneGeometry(8.8, 2.6),
-    new THREE.MeshBasicMaterial({ map: exhibitTextTexture(XIAN_EXHIBITION.subtitle, XIAN_EXHIBITION.quote, "#b98542", 1344, 400, { wrapSubtitle: true }), toneMapped: false, side: THREE.DoubleSide })
+    new THREE.MeshBasicMaterial({ map: exhibitTextTexture(XIAN_EXHIBITION.subtitle, XIAN_EXHIBITION.quote, "#b98542", 1792, 533, { wrapSubtitle: true }), toneMapped: false, side: THREE.DoubleSide })
   );
   title.position.set(0, 4.42, 8.72);
   faceReadablePlane(title);
@@ -1450,7 +1436,7 @@ function createCompactTitleWall(exhibition, materials) {
   const group = new THREE.Group();
   const title = new THREE.Mesh(
     new THREE.PlaneGeometry(8.4, 2.5),
-    new THREE.MeshBasicMaterial({ map: exhibitTextTexture(exhibition.subtitle, exhibition.quote, "#b98542", 1344, 400, { wrapSubtitle: true }), toneMapped: false, side: THREE.DoubleSide })
+    new THREE.MeshBasicMaterial({ map: exhibitTextTexture(exhibition.subtitle, exhibition.quote, "#b98542", 1792, 533, { wrapSubtitle: true }), toneMapped: false, side: THREE.DoubleSide })
   );
   title.position.set(0, 4.0, 0);
   faceReadablePlane(title);
